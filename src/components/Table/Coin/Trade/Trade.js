@@ -1,7 +1,6 @@
 import EditTradeButtons from '../../../UI/EditTradeButtons';
 
 const Trade = ({ state: trade }) => {
-  console.log(trade);
   return (
     <div>
       <input defaultValue={trade.amount}></input>
