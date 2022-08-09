@@ -21,7 +21,7 @@ const Coin = ({ state: coin, addNewTrade, editInput, editCoinName }) => {
       <input
         value={coin.name}
         placeholder="name"
-        maxlength="15"
+        maxLength="15"
         onChange={editName}
       />
       <div>{trades}</div>

@@ -3,11 +3,7 @@ let rerenderEntireTree = () => {
 };
 
 const EMPTY_TRADE = { tradeId: '0', amount: '', buyPrice: '', sellPrice: '' };
-const EMPTY_COIN = {
-  coinId: '',
-  name: '',
-  trades: [],
-};
+const EMPTY_COIN = { coinId: '', name: '', trades: [] };
 
 let state = {
   tablePage: {
@@ -69,7 +65,5 @@ export const editCoinName = (coinId, value) => {
 export const subscribe = (observer) => {
   rerenderEntireTree = observer;
 };
-
-window.state = state.tablePage.table;
 
 export default state;
