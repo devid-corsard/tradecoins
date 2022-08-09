@@ -18,7 +18,12 @@ const Coin = ({ state: coin, addNewTrade, editInput, editCoinName }) => {
 
   return (
     <div>
-      <input value={coin.name} onChange={editName} />
+      <input
+        value={coin.name}
+        placeholder="name"
+        maxlength="15"
+        onChange={editName}
+      />
       <div>{trades}</div>
       <button onClick={newTrade}>Add</button>
       <hr />

@@ -1,4 +1,6 @@
-import { rerenderEntireTree } from '../render';
+let rerenderEntireTree = () => {
+  console.log('state changed');
+};
 
 const EMPTY_TRADE = { tradeId: '0', amount: '', buyPrice: '', sellPrice: '' };
 const EMPTY_COIN = {
@@ -63,6 +65,9 @@ export const editInput = (coinId, tradeId, field, value) => {
 export const editCoinName = (coinId, value) => {
   state.tablePage.table[coinId].name = value;
   rerenderEntireTree(state);
+};
+export const subscribe = (observer) => {
+  rerenderEntireTree = observer;
 };
 
 window.state = state.tablePage.table;
