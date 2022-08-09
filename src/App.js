@@ -4,7 +4,11 @@ import Table from './components/Table/Table';
 const App = (props) => {
   return (
     <div className="App">
-      <Table state={props.state.table} />
+      <Table
+        state={props.state.tablePage.table}
+        addNewTrade={props.addNewTrade}
+        editInput={props.editInput}
+      />
       <EditTableButtons />
     </div>
   );
