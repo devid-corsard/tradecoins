@@ -1,13 +1,11 @@
 import Coin from './Coin/Coin';
 
-const Table = ({ state: trades, addNewTrade, editInput, editCoinName }) => {
+const Table = ({ state: trades, dispatch }) => {
   const coins = trades.map((coin) => (
     <Coin
       state={coin}
       key={coin.coinId}
-      addNewTrade={addNewTrade}
-      editInput={editInput}
-      editCoinName={editCoinName}
+      dispatch={dispatch}
     />
   ));
   return <div>{coins}</div>;

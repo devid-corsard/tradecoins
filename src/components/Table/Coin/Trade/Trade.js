@@ -1,8 +1,15 @@
 import EditTradeButtons from '../../../UI/EditTradeButtons';
 
-const Trade = ({ state: trade, editInput, coinId }) => {
+const Trade = ({ state: trade, dispatch, coinId }) => {
   const onChange = (e) => {
-    editInput(coinId, trade.tradeId, e.target.className, e.target.value);
+    const action = {
+      type: 'EDIT_NUM_INPUT',
+      coinId,
+      tradeId: trade.tradeId,
+      field: e.target.className,
+      value: e.target.value
+    };
+    dispatch(action);
   };
   // ADDD MAX LENGHT FOR INPUTS
   return (

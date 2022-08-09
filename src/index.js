@@ -10,10 +10,7 @@ export const rerenderEntireTree = (state) => {
     <React.StrictMode>
       <App
         state={store.getState()}
-        addNewCoin={store.addNewCoin.bind(store)}
-        addNewTrade={store.addNewTrade.bind(store)}
-        editInput={store.editInput.bind(store)}
-        editCoinName={store.editCoinName.bind(store)}
+        dispatch={store.dispatch.bind(store)}
       />
     </React.StrictMode>
   );

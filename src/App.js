@@ -6,11 +6,9 @@ const App = (props) => {
     <div className="App">
       <Table
         state={props.state.tablePage.table}
-        addNewTrade={props.addNewTrade}
-        editInput={props.editInput}
-        editCoinName={props.editCoinName}
+        dispatch={props.dispatch}
       />
-      <EditTableButtons addNewCoin={props.addNewCoin} />
+      <EditTableButtons dispatch={props.dispatch} />
     </div>
   );
 };

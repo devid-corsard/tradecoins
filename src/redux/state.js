@@ -41,31 +41,37 @@ let store = {
   _callSubscriber() {
     console.log('state changed');
   },
-  addNewCoin() {
-    const table = this._state.tablePage.table;
-    table.push({
-      ...EMPTY_COIN,
-      coinId: table.length,
-      trades: [{ ...EMPTY_TRADE }],
-    });
-    this._callSubscriber(this._state);
-  },
-  addNewTrade(coinId) {
-    const trades = this._state.tablePage.table[coinId].trades;
-    trades.push({ ...EMPTY_TRADE, tradeId: trades.length });
-    this._callSubscriber(this._state);
-  },
-  editInput(coinId, tradeId, field, value) {
-    if (!+value && +value !== 0) return;
-    this._state.tablePage.table[coinId].trades[tradeId][field] = value;
-    this._callSubscriber(this._state);
-  },
-  editCoinName(coinId, value) {
-    this._state.tablePage.table[coinId].name = value;
-    this._callSubscriber(this._state);
-  },
   subscribe(observer) {
     this._callSubscriber = observer;
+  },
+  dispatch(action) {
+    const { type } = action;
+    const tablePage = this._state.tablePage;
+
+    if (type === 'ADD_NEW_TRADE') {
+      const { coinId } = action;
+      const trades = tablePage.table[coinId].trades;
+      trades.push({ ...EMPTY_TRADE, tradeId: trades.length });
+
+    } else if (type === 'ADD_NEW_COIN') {
+
+      const table = tablePage.table;
+      const coinId = table.length;
+      table.push({ ...EMPTY_COIN, coinId, trades: [{ ...EMPTY_TRADE }] });
+
+    } else if (type === 'EDIT_NUM_INPUT'){
+
+      const { value, coinId, tradeId, field } = action;
+      if (!+value && +value !== 0) return;
+      tablePage.table[coinId].trades[tradeId][field] = value;
+
+    } else if (type === 'EDIT_COIN_NAME'){
+
+      const { value, coinId } = action;
+      tablePage.table[coinId].name = value;
+    }
+    this._callSubscriber(this._state);
+
   },
 };
 

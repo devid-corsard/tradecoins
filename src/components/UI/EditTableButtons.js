@@ -1,5 +1,5 @@
 const EditTableButtons = (props) => {
-  const addNewCoin = () => props.addNewCoin();
+  const addNewCoin = () => props.dispatch({type: 'ADD_NEW_COIN'});
   return (
     <div>
       <button onClick={addNewCoin}>Add new coin</button>

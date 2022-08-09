@@ -1,25 +1,28 @@
 import Trade from './Trade/Trade';
 
-const Coin = ({ state: coin, addNewTrade, editInput, editCoinName }) => {
+const Coin = ({ state: coin, dispatch }) => {
+  const { coinId, name } = coin;
   const trades = coin.trades.map((trade) => (
     <Trade
       state={trade}
       key={trade.tradeId}
-      coinId={coin.coinId}
-      editInput={editInput}
+      coinId={coinId}
+      dispatch={dispatch}
     />
   ));
   const newTrade = () => {
-    addNewTrade(coin.coinId);
+    const action = { type: "ADD_NEW_TRADE", coinId };
+    dispatch(action);
   };
   const editName = (e) => {
-    editCoinName(coin.coinId, e.target.value);
+    const action = { type: 'EDIT_COIN_NAME', coinId, value: e.target.value };
+    dispatch(action);
   };
 
   return (
     <div>
       <input
-        value={coin.name}
+        value={name}
         placeholder="name"
         maxLength="15"
         onChange={editName}
