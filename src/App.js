@@ -8,8 +8,9 @@ const App = (props) => {
         state={props.state.tablePage.table}
         addNewTrade={props.addNewTrade}
         editInput={props.editInput}
+        editCoinName={props.editCoinName}
       />
-      <EditTableButtons />
+      <EditTableButtons addNewCoin={props.addNewCoin} />
     </div>
   );
 };

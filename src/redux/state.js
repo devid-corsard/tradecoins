@@ -1,6 +1,11 @@
 import { rerenderEntireTree } from '../render';
 
-const EMPTY_TRADE = { tradeId: 3, amount: '', buyPrice: '', sellPrice: '' };
+const EMPTY_TRADE = { tradeId: '0', amount: '', buyPrice: '', sellPrice: '' };
+const EMPTY_COIN = {
+  coinId: '',
+  name: '',
+  trades: [],
+};
 
 let state = {
   tablePage: {
@@ -36,6 +41,15 @@ let state = {
   },
 };
 
+export const addNewCoin = () => {
+  const table = state.tablePage.table;
+  table.push({
+    ...EMPTY_COIN,
+    coinId: table.length,
+    trades: [{ ...EMPTY_TRADE }],
+  });
+  rerenderEntireTree(state);
+};
 export const addNewTrade = (coinId) => {
   const trades = state.tablePage.table[coinId].trades;
   trades.push({ ...EMPTY_TRADE, tradeId: trades.length });
@@ -44,6 +58,10 @@ export const addNewTrade = (coinId) => {
 export const editInput = (coinId, tradeId, field, value) => {
   if (!+value && +value !== 0) return;
   state.tablePage.table[coinId].trades[tradeId][field] = value;
+  rerenderEntireTree(state);
+};
+export const editCoinName = (coinId, value) => {
+  state.tablePage.table[coinId].name = value;
   rerenderEntireTree(state);
 };
 

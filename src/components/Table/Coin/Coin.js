@@ -1,6 +1,6 @@
 import Trade from './Trade/Trade';
 
-const Coin = ({ state: coin, addNewTrade, editInput }) => {
+const Coin = ({ state: coin, addNewTrade, editInput, editCoinName }) => {
   const trades = coin.trades.map((trade) => (
     <Trade
       state={trade}
@@ -12,10 +12,13 @@ const Coin = ({ state: coin, addNewTrade, editInput }) => {
   const newTrade = () => {
     addNewTrade(coin.coinId);
   };
+  const editName = (e) => {
+    editCoinName(coin.coinId, e.target.value);
+  };
 
   return (
     <div>
-      <input defaultValue={coin.name}></input>
+      <input value={coin.name} onChange={editName} />
       <div>{trades}</div>
       <button onClick={newTrade}>Add</button>
       <hr />
