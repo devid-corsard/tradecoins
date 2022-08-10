@@ -1,4 +1,4 @@
-import { editNameActionCreator, newTradeActionCreator } from '../../../redux/state';
+import { editNameActionCreator, newTradeActionCreator } from '../../../redux/table-reducer';
 import Trade from './Trade/Trade';
 
 

@@ -1,4 +1,4 @@
-import { editNumInputActionCreator } from '../../../../redux/state';
+import { editNumInputActionCreator } from '../../../../redux/table-reducer';
 import EditTradeButtons from '../../../UI/EditTradeButtons';
 
 
