@@ -1,4 +1,7 @@
+import { editNameActionCreator, newTradeActionCreator } from '../../../redux/state';
 import Trade from './Trade/Trade';
+
+
 
 const Coin = ({ state: coin, dispatch }) => {
   const { coinId, name } = coin;
@@ -11,11 +14,11 @@ const Coin = ({ state: coin, dispatch }) => {
     />
   ));
   const newTrade = () => {
-    const action = { type: "ADD_NEW_TRADE", coinId };
+    const action = newTradeActionCreator(coinId);
     dispatch(action);
   };
   const editName = (e) => {
-    const action = { type: 'EDIT_COIN_NAME', coinId, value: e.target.value };
+    const action = editNameActionCreator(coinId, e.target.value);
     dispatch(action);
   };
 

@@ -1,5 +1,7 @@
+import { addNewCoinActionCreator } from "../../redux/state";
+
 const EditTableButtons = (props) => {
-  const addNewCoin = () => props.dispatch({type: 'ADD_NEW_COIN'});
+  const addNewCoin = () => props.dispatch(addNewCoinActionCreator());
   return (
     <div>
       <button onClick={addNewCoin}>Add new coin</button>

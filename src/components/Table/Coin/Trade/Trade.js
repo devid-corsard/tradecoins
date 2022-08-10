@@ -1,14 +1,11 @@
+import { editNumInputActionCreator } from '../../../../redux/state';
 import EditTradeButtons from '../../../UI/EditTradeButtons';
+
+
 
 const Trade = ({ state: trade, dispatch, coinId }) => {
   const onChange = (e) => {
-    const action = {
-      type: 'EDIT_NUM_INPUT',
-      coinId,
-      tradeId: trade.tradeId,
-      field: e.target.className,
-      value: e.target.value
-    };
+    const action = editNumInputActionCreator(coinId, trade.tradeId, e.target.className, e.target.value);
     dispatch(action);
   };
   // ADDD MAX LENGHT FOR INPUTS
