@@ -1,8 +1,8 @@
-import Coin from './Coin/Coin';
+import CoinContainer from './Coin/CoinContainer';
 
 const Table = ({ state: trades, dispatch }) => {
   const coins = trades.map((coin) => (
-    <Coin
+    <CoinContainer
       state={coin}
       key={coin.coinId}
       dispatch={dispatch}

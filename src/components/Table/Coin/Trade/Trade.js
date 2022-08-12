@@ -1,39 +1,29 @@
-import { editNumInputActionCreator } from '../../../../redux/table-reducer';
-import EditTradeButtons from '../../../UI/EditTradeButtons';
-
-
-
-const Trade = ({ state: trade, dispatch, coinId }) => {
-  const onChange = (e) => {
-    const action = editNumInputActionCreator(coinId, trade.tradeId, e.target.className, e.target.value);
-    dispatch(action);
-  };
+const Trade = (props) => {
   // ADDD MAX LENGHT FOR INPUTS
   return (
-    <div>
+    <span>
       <input
         className="amount"
-        value={trade.amount}
+        value={props.trade.amount}
         placeholder="amount"
-        onChange={onChange}
+        onChange={props.input.action}
       />
       <input
         className="buyPrice"
-        value={trade.buyPrice}
+        value={props.trade.buyPrice}
         placeholder="buy price"
-        onChange={onChange}
+        onChange={props.input.action}
       />
-      <input value={trade.spent} placeholder="spent" disabled readOnly />
+      <input value={props.trade.spent} placeholder="spent" disabled readOnly />
       <input
         className="sellPrice"
-        value={trade.sellPrice}
+        value={props.trade.sellPrice}
         placeholder="sell price"
-        onChange={onChange}
+        onChange={props.input.action}
       />
-      <input value={trade.recieved} placeholder="recieved" disabled readOnly />
-      <input value={trade.diff} placeholder="diff" disabled readOnly />
-      <EditTradeButtons />
-    </div>
+      <input value={props.trade.recieved} placeholder="recieved" disabled readOnly />
+      <input value={props.trade.diff} placeholder="diff" disabled readOnly />
+    </span>
   );
 };
 

@@ -1,5 +1,5 @@
-import EditTableButtons from './components/UI/EditTableButtons';
 import Table from './components/Table/Table';
+import EditTableButtonsContainer from './components/UI/EditTableButtonsContainer';
 
 const App = (props) => {
   return (
@@ -8,7 +8,7 @@ const App = (props) => {
         state={props.state.tablePage.table}
         dispatch={props.dispatch}
       />
-      <EditTableButtons dispatch={props.dispatch} />
+      <EditTableButtonsContainer dispatch={props.dispatch} />
     </div>
   );
 };
