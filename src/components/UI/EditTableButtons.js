@@ -1,11 +1,10 @@
 import { addNewCoinActionCreator } from "../../redux/table-reducer";
-import AButton from "./AButton";
 
-const EditTableButtonsContainer = (props) => {
+const EditTableButtons = (props) => {
   const addNewCoin = () => props.dispatch(addNewCoinActionCreator());
   return (
     <div>
-      <AButton action={addNewCoin} name='Add new coin'/>
+      <button onClick={addNewCoin}>Add new coin</button>
       <button>save to cp</button>
       <button>paste data</button>
       <button>reset</button>
@@ -14,4 +13,4 @@ const EditTableButtonsContainer = (props) => {
   );
 };
 
-export default EditTableButtonsContainer;
+export default EditTableButtons;
