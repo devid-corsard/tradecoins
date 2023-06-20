@@ -26,8 +26,8 @@ const Portfolio = () => {
       >
         Add new
       </button>
-      {portfolio.map((item, index) => (
-        <PortfolioItem name={item.name} data={item.data} key={index} />
+      {portfolio.map((item) => (
+        <PortfolioItem item={item} />
       ))}
     </div>
   );

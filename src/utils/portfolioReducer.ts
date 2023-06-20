@@ -48,10 +48,12 @@ const portfolioReducerHandler = {
     state: Portfolio,
     action: UpdateNameAction
   ): Portfolio => {
-    if (action.payload.id === "testId") {
-      return [...mockPortfolio];
-    }
-    return state;
+    state.forEach((pi: PortfolioItemType) => {
+      if (pi.id === action.payload.id) {
+        pi.name = action.payload.value;
+      }
+    });
+    return [...state];
   },
   [PortfolioActionsEnum.addNewTrade]: (
     state: Portfolio,

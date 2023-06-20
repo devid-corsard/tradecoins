@@ -1,29 +1,44 @@
-import React from 'react';
-import TradeData from '../types/TradeDataType';
-import TradeItem from './TradeItem'
+import React, { useContext } from "react";
+import TradeItem from "./TradeItem";
+import { PortfolioContext } from "../context/PortfolioContext";
+import {
+  PortfolioActionsEnum,
+  UpdateNameAction,
+} from "../types/PortfolioActions";
+import PortfolioItemType from "../types/PortfolioItemType";
 
 type Props = {
-  name: string,
-  data: TradeData[],
-}
+  item: PortfolioItemType;
+};
 
-const PortfolioItem = ({ data, name }: Props) => {
-
-  const handleAddNew = () => { console.log("add new"); };
+const PortfolioItem = ({ item }: Props) => {
+  const { dispatch } = useContext(PortfolioContext);
+  const handleAddNew = () => {
+    console.log("add new");
+  };
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(`new name: ${e.currentTarget.value}`);
+    const action: UpdateNameAction = {
+      type: PortfolioActionsEnum.updateName,
+      payload: {
+        id: item.id,
+        value: e.currentTarget.value,
+      },
+    };
+    dispatch(action);
   };
   return (
-    <div className='bg-white rounded-md shadow-md mx-auto flex flex-col items-center gap-4 p-4 m-4' >
+    <div className="bg-white rounded-md shadow-md mx-auto flex flex-col items-center gap-4 p-4 m-4">
       <input
-        type='text'
-        placeholder='coin name'
-        className='w-96 rounded-md shadow-md border-neutral-200 p-2 border-solid border'
-        defaultValue={name}
+        type="text"
+        placeholder="coin name"
+        className="w-96 rounded-md shadow-md border-neutral-200 p-2 border-solid border"
+        value={item.name}
         onChange={handleNameChange}
       />
-      <div className='flex flex-col'>
-        {data.map((data, id) => <TradeItem data={data} key={id} />)}
+      <div className="flex flex-col">
+        {item.data.map((data) => (
+          <TradeItem data={data} key={data.id} />
+        ))}
         <button
           className="m-1 p-1 border bg-white hover:bg-gray-100 active:bg-orange-100"
           onClick={handleAddNew}
@@ -31,8 +46,8 @@ const PortfolioItem = ({ data, name }: Props) => {
           Add new
         </button>
       </div>
-    </div >
-  )
-}
+    </div>
+  );
+};
 
-export default PortfolioItem
+export default PortfolioItem;
