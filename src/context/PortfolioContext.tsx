@@ -1,9 +1,9 @@
-import { ReactNode, createContext, useReducer } from 'react';
-import PortfolioItemType from '../types/PortfolioItemType';
-import { PortfolioContextType } from '../types/PortfolioContextType';
-import { PortfolioActions, PortfolioActionsEnum } from '../types/PortfolioActions';
-import { mockPortfolio } from '../mockData';
-import { INITIAL_PORTFOLIO } from './inits';
+import { ReactNode, createContext, useReducer } from "react";
+import PortfolioItemType from "../types/PortfolioItemType";
+import { PortfolioContextType } from "../types/PortfolioContextType";
+import { INITIAL_PORTFOLIO } from "./inits";
+import { PortfolioActionTypesUnion } from "../types/PortfolioActions";
+import portfolioReducerHandler from "../utils/portfolioReducer";
 
 export const PortfolioContext = createContext<PortfolioContextType>({
   portfolio: INITIAL_PORTFOLIO,
@@ -16,18 +16,14 @@ type Props = { children: ReactNode };
 export const PortfolioContextProvider = ({ children }: Props) => {
   const portfolioReducer = (
     state: PortfolioItemType[],
-    action: PortfolioActions,
+    action: PortfolioActionTypesUnion
   ): PortfolioItemType[] => {
-    switch (action.type) {
-      case PortfolioActionsEnum.getPortfolio: {
-        if (action.payload.id === 'testId') {
-          return [...mockPortfolio];
-        }
-        return INITIAL_PORTFOLIO;
-      }
-      default:
-        return state;
-    }
+    return (
+      portfolioReducerHandler[action.type] as (
+        state: PortfolioItemType[],
+        action: PortfolioActionTypesUnion
+      ) => PortfolioItemType[]
+    )(state, action);
   };
 
   const [portfolio, dispatch] = useReducer(portfolioReducer, INITIAL_PORTFOLIO);

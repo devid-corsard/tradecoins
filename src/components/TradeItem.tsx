@@ -1,18 +1,34 @@
 // import React from 'react'
 
+import { useContext } from "react";
+import { PortfolioContext } from "../context/PortfolioContext";
 import TradeData from "../types/TradeDataType";
 import InputItem from "./InputItem";
 import SpanItem from "./SpanItem";
+import {
+  CopyTradeAction,
+  PortfolioActionsEnum,
+} from "../types/PortfolioActions";
 
 type Props = {
-  data: TradeData,
+  data: TradeData;
 };
 
 const TradeItem = ({ data }: Props) => {
-  const handleDelete = () => { console.log("delete"); };
-  const handleCopy = () => { console.log("copy"); };
+  const { dispatch } = useContext(PortfolioContext);
+  const handleDelete = () => {
+    console.log("delete");
+  };
+  const handleCopy = () => {
+    const action: CopyTradeAction = {
+      type: PortfolioActionsEnum.copyTrade,
+      payload: { id: data.id },
+    };
+    dispatch(action);
+    console.log("copy");
+  };
   return (
-    <div className='flex flex-wrap items-center justify-start rounded-sm border-gray-200 border m-1'>
+    <div className="flex flex-wrap items-center justify-start rounded-sm border-gray-200 border m-1">
       <InputItem name="Amount:" value={data.amount} />
       <InputItem name="Buy price:" value={data.buy_price} />
       <SpanItem name="Spend:" value={data.spend} color="pink" />
@@ -34,7 +50,7 @@ const TradeItem = ({ data }: Props) => {
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default TradeItem
+export default TradeItem;

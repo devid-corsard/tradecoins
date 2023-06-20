@@ -1,7 +1,8 @@
-import TradeData from './TradeDataType';
+import TradeData from "./TradeDataType";
 
 type PortfolioItemType = {
-  name: string,
-  data: TradeData[],
+  name: string;
+  id: string;
+  data: TradeData[];
 };
 export default PortfolioItemType;

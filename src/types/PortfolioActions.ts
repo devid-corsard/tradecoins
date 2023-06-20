@@ -1,64 +1,64 @@
 export const enum PortfolioActionsEnum {
-  getPortfolio = 'GET_PORTFOLIO',
-  updateName = 'UPDATE_NAME',
-  updateAmount = 'UPDATE_AMOUNT',
-  updateBuyPrice = 'UPDATE_BUY_PRICE',
-  updateSellPrice = 'UPDATE_SELL_PRICE',
-  addNewTrade = 'ADD_NEW_TRADE',
-  copyTrade = 'COPY_TRADE',
-  deleteTrade = 'DELETE_TRADE',
-  addNewPortfolioItem = 'ADD_NEW_PITEM',
-  deletePortfolioItem = 'DELETE_PITEM',
+  getPortfolio = "GET_PORTFOLIO",
+  updateName = "UPDATE_NAME",
+  updateAmount = "UPDATE_AMOUNT",
+  updateBuyPrice = "UPDATE_BUY_PRICE",
+  updateSellPrice = "UPDATE_SELL_PRICE",
+  addNewTrade = "ADD_NEW_TRADE",
+  copyTrade = "COPY_TRADE",
+  deleteTrade = "DELETE_TRADE",
+  addNewPortfolioItem = "ADD_NEW_PITEM",
+  deletePortfolioItem = "DELETE_PITEM",
 }
 
-type GetPortfolio = {
-  type: PortfolioActionsEnum.getPortfolio,
-  payload: { id: string }
+export type GetPortfolioAction = {
+  type: PortfolioActionsEnum.getPortfolio;
+  payload: { id: string };
 };
-type UpdateName = {
-  type: PortfolioActionsEnum.updateName,
-  payload: { id: string, value: string }
+export type UpdateNameAction = {
+  type: PortfolioActionsEnum.updateName;
+  payload: { id: string; value: string };
 };
-type UpdateAmount = {
-  type: PortfolioActionsEnum.updateAmount,
-  payload: { id: string, value: string }
+export type UpdateAmountAction = {
+  type: PortfolioActionsEnum.updateAmount;
+  payload: { id: string; value: string };
 };
-type UpdateBuyPrice = {
-  type: PortfolioActionsEnum.updateBuyPrice,
-  payload: { id: string, value: string }
+export type UpdateBuyPriceAction = {
+  type: PortfolioActionsEnum.updateBuyPrice;
+  payload: { id: string; value: string };
 };
-type UpdateSellPrice = {
-  type: PortfolioActionsEnum.updateSellPrice,
-  payload: { id: string, value: string }
+export type UpdateSellPriceAction = {
+  type: PortfolioActionsEnum.updateSellPrice;
+  payload: { id: string; value: string };
 };
-type AddNewTrade = {
-  type: PortfolioActionsEnum.addNewTrade,
-  payload: { id: string }
+export type AddNewTradeAction = {
+  type: PortfolioActionsEnum.addNewTrade;
+  payload: { id: string };
 };
-type CopyTrade = {
-  type: PortfolioActionsEnum.copyTrade,
-  payload: { id: string }
+export type CopyTradeAction = {
+  type: PortfolioActionsEnum.copyTrade;
+  payload: { id: string };
 };
-type DeleteTrade = {
-  type: PortfolioActionsEnum.deleteTrade,
-  payload: { id: string }
+export type DeleteTradeAction = {
+  type: PortfolioActionsEnum.deleteTrade;
+  payload: { id: string };
 };
-type AddNewPortfolioItem = {
-  type: PortfolioActionsEnum.addNewPortfolioItem
+export type AddNewPortfolioItemAction = {
+  type: PortfolioActionsEnum.addNewPortfolioItem;
 };
-type DeletePortfolioItem = {
-  type: PortfolioActionsEnum.deletePortfolioItem,
-  payload: { id: string }
+export type DeletePortfolioItemAction = {
+  type: PortfolioActionsEnum.deletePortfolioItem;
+  payload: { id: string };
 };
 
-export type PortfolioActions =
-  | GetPortfolio
-  | UpdateName
-  | UpdateAmount
-  | UpdateBuyPrice
-  | UpdateSellPrice
-  | AddNewTrade
-  | CopyTrade
-  | DeleteTrade
-  | AddNewPortfolioItem
-  | DeletePortfolioItem;
+export type PortfolioActionTypesUnion =
+  | GetPortfolioAction
+  | UpdateNameAction
+  | UpdateAmountAction
+  | UpdateBuyPriceAction
+  | UpdateSellPriceAction
+  | AddNewTradeAction
+  | CopyTradeAction
+  | DeleteTradeAction
+  | AddNewPortfolioItemAction
+  | DeletePortfolioItemAction;

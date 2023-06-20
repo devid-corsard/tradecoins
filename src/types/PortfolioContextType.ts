@@ -1,8 +1,8 @@
-import { Dispatch } from 'react';
-import PortfolioItemType from './PortfolioItemType';
-import { PortfolioActions } from './PortfolioActions';
+import { Dispatch } from "react";
+import PortfolioItemType from "./PortfolioItemType";
+import { PortfolioActionTypesUnion } from "./PortfolioActions";
 
 export type PortfolioContextType = {
-  portfolio: PortfolioItemType[],
-  dispatch: Dispatch<PortfolioActions>
+  portfolio: PortfolioItemType[];
+  dispatch: Dispatch<PortfolioActionTypesUnion>;
 };

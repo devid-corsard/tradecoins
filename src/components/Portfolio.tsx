@@ -1,21 +1,21 @@
-import { useContext, useEffect } from 'react';
-import { PortfolioContext } from '../context/PortfolioContext';
-import PortfolioItem from './PortfolioItem';
-import { PortfolioActionsEnum, } from '../types/PortfolioActions';
-import { AuthContext } from '../context/AuthContext';
+import { useContext, useEffect } from "react";
+import { PortfolioContext } from "../context/PortfolioContext";
+import PortfolioItem from "./PortfolioItem";
+import { PortfolioActionsEnum } from "../types/PortfolioActions";
+import { AuthContext } from "../context/AuthContext";
 
 const Portfolio = () => {
   const { portfolio, dispatch } = useContext(PortfolioContext);
   const { user } = useContext(AuthContext);
   const handleAddNew = () => {
-    console.log('add new');
+    console.log("add new");
   };
   useEffect(() => {
     dispatch({
       type: PortfolioActionsEnum.getPortfolio,
       payload: { id: user.id },
     });
-  }, [user.id]);
+  }, [user.id, dispatch]);
 
   return (
     <div className="w-11/12 mx-auto bg-pink-100 rounded-lg shadow-xl p-3 m-3">
