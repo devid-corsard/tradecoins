@@ -2,16 +2,16 @@
 
 import { useContext } from "react";
 import { PortfolioContext } from "../context/PortfolioContext";
-import TradeData from "../types/TradeDataType";
 import InputItem from "./InputItem";
 import SpanItem from "./SpanItem";
 import {
   CopyTradeAction,
   PortfolioActionsEnum,
 } from "../types/PortfolioActions";
+import TradeItemType from "../types/TradeItemType";
 
 type Props = {
-  data: TradeData;
+  data: TradeItemType;
 };
 
 const TradeItem = ({ data }: Props) => {

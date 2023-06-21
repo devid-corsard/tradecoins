@@ -1,8 +1,8 @@
 import { useContext, useEffect } from "react";
 import { PortfolioContext } from "../context/PortfolioContext";
-import PortfolioItem from "./PortfolioItem";
 import { PortfolioActionsEnum } from "../types/PortfolioActions";
 import { AuthContext } from "../context/AuthContext";
+import PortfolioItem from "../components/PortfolioItem";
 
 const Portfolio = () => {
   const { portfolio, dispatch } = useContext(PortfolioContext);
@@ -27,7 +27,7 @@ const Portfolio = () => {
         Add new
       </button>
       {portfolio.map((item) => (
-        <PortfolioItem item={item} />
+        <PortfolioItem item={item} key={item.id} />
       ))}
     </div>
   );

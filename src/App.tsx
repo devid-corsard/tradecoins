@@ -1,11 +1,11 @@
-import './App.css';
-import { Route, Routes } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Portfolio from './components/Portfolio';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import { AuthContextProvider } from './context/AuthContext';
-import { PortfolioContextProvider } from './context/PortfolioContext';
+import "./App.css";
+import { Route, Routes } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import { AuthContextProvider } from "./context/AuthContext";
+import { PortfolioContextProvider } from "./context/PortfolioContext";
+import Portfolio from "./pages/Portfolio";
 
 function App() {
   return (

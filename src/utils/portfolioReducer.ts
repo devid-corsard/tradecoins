@@ -14,7 +14,7 @@ import {
   UpdateSellPriceAction,
 } from "../types/PortfolioActions";
 import PortfolioItemType from "../types/PortfolioItemType";
-import TradeData from "../types/TradeDataType";
+import TradeItemType from "../types/TradeItemType";
 
 type Portfolio = PortfolioItemType[];
 
@@ -33,11 +33,11 @@ const portfolioReducerHandler = {
     action: CopyTradeAction
   ): Portfolio => {
     state.forEach((portfolioItem: PortfolioItemType) => {
-      portfolioItem.data.forEach((tradeItem: TradeData) => {
+      portfolioItem.data.forEach((tradeItem: TradeItemType) => {
         if (tradeItem.id === action.payload.id) {
           portfolioItem.data.push({
             ...tradeItem,
-            id: action.payload.id + "cp",
+            id: crypto.randomUUID(),
           });
         }
       });
@@ -59,10 +59,22 @@ const portfolioReducerHandler = {
     state: Portfolio,
     action: AddNewTradeAction
   ): Portfolio => {
-    if (action.payload.id === "testId") {
-      return [...mockPortfolio];
-    }
-    return state;
+    const portfolioItem = state.find((pi) => {
+      return pi.id === action.payload.id;
+    });
+    if (!portfolioItem) return state;
+
+    const newTI: TradeItemType = {
+      id: crypto.randomUUID(),
+      amount: "0.00",
+      buy_price: "0.00",
+      sell_price: "0.00",
+      spend: "0.00",
+      recieved: "0.00",
+      difference: "0.00",
+    };
+    (portfolioItem as PortfolioItemType).data.push(newTI);
+    return [...state];
   },
   [PortfolioActionsEnum.deleteTrade]: (
     state: Portfolio,
@@ -102,6 +114,7 @@ const portfolioReducerHandler = {
   },
   [PortfolioActionsEnum.addNewPortfolioItem]: (
     state: Portfolio,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _action: AddNewPortfolioItemAction
   ): Portfolio => {
     return state;

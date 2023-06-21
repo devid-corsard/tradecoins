@@ -1,4 +1,4 @@
-type TradeData = {
+type TradeItemType = {
   id: string;
   spend: string;
   recieved: string;
@@ -7,4 +7,4 @@ type TradeData = {
   buy_price: string;
   sell_price: string;
 };
-export default TradeData;
+export default TradeItemType;

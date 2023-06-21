@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import TradeItem from "./TradeItem";
 import { PortfolioContext } from "../context/PortfolioContext";
 import {
+  AddNewTradeAction,
   PortfolioActionsEnum,
   UpdateNameAction,
 } from "../types/PortfolioActions";
@@ -14,7 +15,13 @@ type Props = {
 const PortfolioItem = ({ item }: Props) => {
   const { dispatch } = useContext(PortfolioContext);
   const handleAddNew = () => {
-    console.log("add new");
+    const action: AddNewTradeAction = {
+      type: PortfolioActionsEnum.addNewTrade,
+      payload: {
+        id: item.id,
+      },
+    };
+    dispatch(action);
   };
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const action: UpdateNameAction = {
