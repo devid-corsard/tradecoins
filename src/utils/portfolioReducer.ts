@@ -28,6 +28,7 @@ const portfolioReducerHandler = {
     }
     return INITIAL_PORTFOLIO;
   },
+
   [PortfolioActionsEnum.copyTrade]: (
     state: Portfolio,
     action: CopyTradeAction
@@ -44,6 +45,7 @@ const portfolioReducerHandler = {
     });
     return [...state];
   },
+
   [PortfolioActionsEnum.updateName]: (
     state: Portfolio,
     action: UpdateNameAction
@@ -55,13 +57,12 @@ const portfolioReducerHandler = {
     });
     return [...state];
   },
+
   [PortfolioActionsEnum.addNewTrade]: (
     state: Portfolio,
     action: AddNewTradeAction
   ): Portfolio => {
-    const portfolioItem = state.find((pi) => {
-      return pi.id === action.payload.id;
-    });
+    const portfolioItem = state.find((pi) => pi.id === action.payload.id);
     if (!portfolioItem) return state;
 
     const newTI: TradeItemType = {
@@ -76,15 +77,31 @@ const portfolioReducerHandler = {
     (portfolioItem as PortfolioItemType).data.push(newTI);
     return [...state];
   },
+
   [PortfolioActionsEnum.deleteTrade]: (
     state: Portfolio,
     action: DeleteTradeAction
   ): Portfolio => {
-    if (action.payload.id === "testId") {
-      return [...mockPortfolio];
+    let itemIdxToDelete;
+    const portfolioItemToDeleteFrom = state.find((pi) => {
+      return (
+        pi.data.find((ti, idx) => {
+          if (ti.id === action.payload.id) {
+            itemIdxToDelete = idx;
+            return true;
+          }
+          return false;
+        }) !== undefined
+      );
+    });
+
+    if (itemIdxToDelete !== undefined && portfolioItemToDeleteFrom) {
+      portfolioItemToDeleteFrom.data.splice(itemIdxToDelete, 1);
+      return [...state];
     }
     return state;
   },
+
   [PortfolioActionsEnum.updateAmount]: (
     state: Portfolio,
     action: UpdateAmountAction
@@ -94,6 +111,7 @@ const portfolioReducerHandler = {
     }
     return state;
   },
+
   [PortfolioActionsEnum.updateBuyPrice]: (
     state: Portfolio,
     action: UpdateBuyPriceAction
@@ -103,6 +121,7 @@ const portfolioReducerHandler = {
     }
     return state;
   },
+
   [PortfolioActionsEnum.updateSellPrice]: (
     state: Portfolio,
     action: UpdateSellPriceAction
@@ -112,6 +131,7 @@ const portfolioReducerHandler = {
     }
     return state;
   },
+
   [PortfolioActionsEnum.addNewPortfolioItem]: (
     state: Portfolio,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -119,6 +139,7 @@ const portfolioReducerHandler = {
   ): Portfolio => {
     return state;
   },
+
   [PortfolioActionsEnum.deletePortfolioItem]: (
     state: Portfolio,
     action: DeletePortfolioItemAction

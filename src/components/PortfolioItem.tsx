@@ -38,7 +38,7 @@ const PortfolioItem = ({ item }: Props) => {
       <input
         type="text"
         placeholder="coin name"
-        className="w-96 rounded-md shadow-md border-neutral-200 p-2 border-solid border"
+        className="w-3/5 rounded-md shadow-md border-neutral-200 p-2 border-solid border"
         value={item.name}
         onChange={handleNameChange}
       />

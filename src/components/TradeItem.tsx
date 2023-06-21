@@ -6,6 +6,7 @@ import InputItem from "./InputItem";
 import SpanItem from "./SpanItem";
 import {
   CopyTradeAction,
+  DeleteTradeAction,
   PortfolioActionsEnum,
 } from "../types/PortfolioActions";
 import TradeItemType from "../types/TradeItemType";
@@ -17,7 +18,11 @@ type Props = {
 const TradeItem = ({ data }: Props) => {
   const { dispatch } = useContext(PortfolioContext);
   const handleDelete = () => {
-    console.log("delete");
+    const action: DeleteTradeAction = {
+      type: PortfolioActionsEnum.deleteTrade,
+      payload: { id: data.id },
+    };
+    dispatch(action);
   };
   const handleCopy = () => {
     const action: CopyTradeAction = {
@@ -25,7 +30,6 @@ const TradeItem = ({ data }: Props) => {
       payload: { id: data.id },
     };
     dispatch(action);
-    console.log("copy");
   };
   return (
     <div className="flex flex-wrap items-center justify-start rounded-sm border-gray-200 border m-1">
