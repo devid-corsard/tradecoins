@@ -1,9 +1,9 @@
+import { TradeItemInputNames } from "./TradeItemType";
+
 export const enum PortfolioActionsEnum {
   getPortfolio = "GET_PORTFOLIO",
   updateName = "UPDATE_NAME",
-  updateAmount = "UPDATE_AMOUNT",
-  updateBuyPrice = "UPDATE_BUY_PRICE",
-  updateSellPrice = "UPDATE_SELL_PRICE",
+  updateTradeInput = "UPDATE_TRADE_INPUT",
   addNewTrade = "ADD_NEW_TRADE",
   copyTrade = "COPY_TRADE",
   deleteTrade = "DELETE_TRADE",
@@ -19,17 +19,9 @@ export type UpdateNameAction = {
   type: PortfolioActionsEnum.updateName;
   payload: { id: string; value: string };
 };
-export type UpdateAmountAction = {
-  type: PortfolioActionsEnum.updateAmount;
-  payload: { id: string; value: string };
-};
-export type UpdateBuyPriceAction = {
-  type: PortfolioActionsEnum.updateBuyPrice;
-  payload: { id: string; value: string };
-};
-export type UpdateSellPriceAction = {
-  type: PortfolioActionsEnum.updateSellPrice;
-  payload: { id: string; value: string };
+export type UpdateTradeInput = {
+  type: PortfolioActionsEnum.updateTradeInput;
+  payload: { id: string; value: string; propName: TradeItemInputNames };
 };
 export type AddNewTradeAction = {
   type: PortfolioActionsEnum.addNewTrade;
@@ -54,9 +46,7 @@ export type DeletePortfolioItemAction = {
 export type PortfolioActionTypesUnion =
   | GetPortfolioAction
   | UpdateNameAction
-  | UpdateAmountAction
-  | UpdateBuyPriceAction
-  | UpdateSellPriceAction
+  | UpdateTradeInput
   | AddNewTradeAction
   | CopyTradeAction
   | DeleteTradeAction

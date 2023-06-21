@@ -9,7 +9,7 @@ import {
   DeleteTradeAction,
   PortfolioActionsEnum,
 } from "../types/PortfolioActions";
-import TradeItemType from "../types/TradeItemType";
+import TradeItemType, { TradeItemInputNames } from "../types/TradeItemType";
 
 type Props = {
   data: TradeItemType;
@@ -33,10 +33,25 @@ const TradeItem = ({ data }: Props) => {
   };
   return (
     <div className="flex flex-wrap items-center justify-start rounded-sm border-gray-200 border m-1">
-      <InputItem name="Amount:" value={data.amount} />
-      <InputItem name="Buy price:" value={data.buy_price} />
+      <InputItem
+        name="Amount:"
+        value={data.amount}
+        propName={TradeItemInputNames.Amount}
+        id={data.id}
+      />
+      <InputItem
+        name="Buy price:"
+        value={data.buy_price}
+        propName={TradeItemInputNames.BuyPrice}
+        id={data.id}
+      />
       <SpanItem name="Spend:" value={data.spend} color="pink" />
-      <InputItem name="Sell price:" value={data.sell_price} />
+      <InputItem
+        name="Sell price:"
+        value={data.sell_price}
+        propName={TradeItemInputNames.SellPrice}
+        id={data.id}
+      />
       <SpanItem name="Recieved:" value={data.recieved} color="green" />
       <SpanItem name="Difference:" value={data.difference} color="orange" />
       <div className="flex text-xs">

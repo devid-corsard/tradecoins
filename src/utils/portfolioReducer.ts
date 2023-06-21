@@ -8,10 +8,8 @@ import {
   DeleteTradeAction,
   GetPortfolioAction,
   PortfolioActionsEnum,
-  UpdateAmountAction,
-  UpdateBuyPriceAction,
   UpdateNameAction,
-  UpdateSellPriceAction,
+  UpdateTradeInput,
 } from "../types/PortfolioActions";
 import PortfolioItemType from "../types/PortfolioItemType";
 import TradeItemType from "../types/TradeItemType";
@@ -102,33 +100,20 @@ const portfolioReducerHandler = {
     return state;
   },
 
-  [PortfolioActionsEnum.updateAmount]: (
+  [PortfolioActionsEnum.updateTradeInput]: (
     state: Portfolio,
-    action: UpdateAmountAction
+    action: UpdateTradeInput
   ): Portfolio => {
-    if (action.payload.id === "testId") {
-      return [...mockPortfolio];
-    }
-    return state;
-  },
-
-  [PortfolioActionsEnum.updateBuyPrice]: (
-    state: Portfolio,
-    action: UpdateBuyPriceAction
-  ): Portfolio => {
-    if (action.payload.id === "testId") {
-      return [...mockPortfolio];
-    }
-    return state;
-  },
-
-  [PortfolioActionsEnum.updateSellPrice]: (
-    state: Portfolio,
-    action: UpdateSellPriceAction
-  ): Portfolio => {
-    if (action.payload.id === "testId") {
-      return [...mockPortfolio];
-    }
+    const done = state.some((pi) => {
+      return pi.data.some((ti) => {
+        if (ti.id === action.payload.id) {
+          ti[action.payload.propName] = action.payload.value;
+          return true;
+        }
+        return false;
+      });
+    });
+    if (done) return [...state];
     return state;
   },
 
