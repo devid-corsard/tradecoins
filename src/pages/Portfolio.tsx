@@ -15,7 +15,6 @@ const Portfolio = () => {
       type: PortfolioActionsEnum.addNewPortfolioItem,
     };
     dispatch(action);
-    console.log("add new");
   };
   useEffect(() => {
     dispatch({
