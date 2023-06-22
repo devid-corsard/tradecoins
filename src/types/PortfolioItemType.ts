@@ -1,8 +1,8 @@
-import TradeItemType from "./TradeItemType";
+import { TradeItemDto } from "../dto/TradeItemDto";
 
 type PortfolioItemType = {
   name: string;
   id: string;
-  data: TradeItemType[];
+  data: TradeItemDto[];
 };
 export default PortfolioItemType;

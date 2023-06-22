@@ -4,7 +4,7 @@ import {
   PortfolioActionsEnum,
   UpdateTradeInput,
 } from "../types/PortfolioActions";
-import { TradeItemInputNames } from "../types/TradeItemType";
+import { TradeItemInputNames } from "../dto/TradeItemDto";
 
 type Props = {
   name: string;

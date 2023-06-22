@@ -9,10 +9,10 @@ import {
   DeleteTradeAction,
   PortfolioActionsEnum,
 } from "../types/PortfolioActions";
-import TradeItemType, { TradeItemInputNames } from "../types/TradeItemType";
+import { TradeItemDto, TradeItemInputNames } from "../dto/TradeItemDto";
 
 type Props = {
-  data: TradeItemType;
+  data: TradeItemDto;
 };
 
 const TradeItem = ({ data }: Props) => {
@@ -32,7 +32,7 @@ const TradeItem = ({ data }: Props) => {
     dispatch(action);
   };
   return (
-    <div className="flex flex-wrap items-center justify-start rounded-sm border-gray-200 border m-1">
+    <div className="flex flex-wrap items-center justify-start rounded-sm border-gray-200 border m-1 md:m-2">
       <InputItem
         name="Amount:"
         value={data.amount}

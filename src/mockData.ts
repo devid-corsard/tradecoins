@@ -1,52 +1,21 @@
+import { TradeItemDto } from "./dto/TradeItemDto";
 import PortfolioItemType from "./types/PortfolioItemType";
 
 export const mockPortfolio: PortfolioItemType[] = [
   {
     name: "btc",
-    id: "1",
+    id: crypto.randomUUID(),
     data: [
-      {
-        id: "2",
-        spend: "0.00",
-        recieved: "0.00",
-        difference: "0.00",
-        amount: "1.00",
-        buy_price: "0.00",
-        sell_price: "0.00",
-      },
-      {
-        id: "3",
-        spend: "0.00",
-        recieved: "0.00",
-        difference: "0.00",
-        amount: "2.00",
-        buy_price: "0.00",
-        sell_price: "0.00",
-      },
+      new TradeItemDto(crypto.randomUUID(), "0.002", "24000", "25000"),
+      new TradeItemDto(crypto.randomUUID(), "0.003", "23000", "23500"),
     ],
   },
   {
     name: "ltc",
-    id: "4",
+    id: crypto.randomUUID(),
     data: [
-      {
-        id: "5",
-        spend: "0.00",
-        recieved: "0.00",
-        difference: "0.00",
-        amount: "3.00",
-        buy_price: "0.00",
-        sell_price: "0.00",
-      },
-      {
-        id: "6",
-        spend: "0.00",
-        recieved: "0.00",
-        difference: "0.00",
-        amount: "4.00",
-        buy_price: "0.00",
-        sell_price: "0.00",
-      },
+      new TradeItemDto(crypto.randomUUID(), "10", "98", "0"),
+      new TradeItemDto(crypto.randomUUID(), "10", "64", "76"),
     ],
   },
 ];

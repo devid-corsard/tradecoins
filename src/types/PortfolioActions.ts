@@ -1,4 +1,4 @@
-import { TradeItemInputNames } from "./TradeItemType";
+import { TradeItemInputNames } from "../dto/TradeItemDto";
 
 export const enum PortfolioActionsEnum {
   getPortfolio = "GET_PORTFOLIO",

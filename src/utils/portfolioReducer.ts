@@ -1,4 +1,5 @@
 import { INITIAL_PORTFOLIO } from "../context/inits";
+import { TradeItemDto, TradeItemInputNames } from "../dto/TradeItemDto";
 import { mockPortfolio } from "../mockData";
 import {
   AddNewPortfolioItemAction,
@@ -12,7 +13,6 @@ import {
   UpdateTradeInput,
 } from "../types/PortfolioActions";
 import PortfolioItemType from "../types/PortfolioItemType";
-import TradeItemType from "../types/TradeItemType";
 
 type Portfolio = PortfolioItemType[];
 
@@ -32,12 +32,16 @@ const portfolioReducerHandler = {
     action: CopyTradeAction
   ): Portfolio => {
     state.forEach((portfolioItem: PortfolioItemType) => {
-      portfolioItem.data.forEach((tradeItem: TradeItemType) => {
+      portfolioItem.data.forEach((tradeItem: TradeItemDto) => {
         if (tradeItem.id === action.payload.id) {
-          portfolioItem.data.push({
-            ...tradeItem,
-            id: crypto.randomUUID(),
-          });
+          portfolioItem.data.push(
+            new TradeItemDto(
+              crypto.randomUUID(),
+              tradeItem[TradeItemInputNames.Amount],
+              tradeItem[TradeItemInputNames.BuyPrice],
+              tradeItem[TradeItemInputNames.SellPrice]
+            )
+          );
         }
       });
     });
@@ -63,15 +67,7 @@ const portfolioReducerHandler = {
     const portfolioItem = state.find((pi) => pi.id === action.payload.id);
     if (!portfolioItem) return state;
 
-    const newTI: TradeItemType = {
-      id: crypto.randomUUID(),
-      amount: "0.00",
-      buy_price: "0.00",
-      sell_price: "0.00",
-      spend: "0.00",
-      recieved: "0.00",
-      difference: "0.00",
-    };
+    const newTI: TradeItemDto = new TradeItemDto(crypto.randomUUID());
     (portfolioItem as PortfolioItemType).data.push(newTI);
     return [...state];
   },
@@ -80,20 +76,14 @@ const portfolioReducerHandler = {
     state: Portfolio,
     action: DeleteTradeAction
   ): Portfolio => {
-    let itemIdxToDelete;
+    let itemIdxToDelete = -1;
     const portfolioItemToDeleteFrom = state.find((pi) => {
-      return (
-        pi.data.find((ti, idx) => {
-          if (ti.id === action.payload.id) {
-            itemIdxToDelete = idx;
-            return true;
-          }
-          return false;
-        }) !== undefined
-      );
+      itemIdxToDelete = pi.data.findIndex((ti) => ti.id === action.payload.id);
+      if (itemIdxToDelete !== -1) return true;
+      return false;
     });
 
-    if (itemIdxToDelete !== undefined && portfolioItemToDeleteFrom) {
+    if (itemIdxToDelete !== -1 && portfolioItemToDeleteFrom) {
       portfolioItemToDeleteFrom.data.splice(itemIdxToDelete, 1);
       return [...state];
     }
@@ -122,15 +112,23 @@ const portfolioReducerHandler = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _action: AddNewPortfolioItemAction
   ): Portfolio => {
-    return state;
+    const newPortfolioItem: PortfolioItemType = {
+      name: "",
+      id: crypto.randomUUID(),
+      data: [new TradeItemDto(crypto.randomUUID())],
+    };
+    state.push(newPortfolioItem);
+    return [...state];
   },
 
   [PortfolioActionsEnum.deletePortfolioItem]: (
     state: Portfolio,
     action: DeletePortfolioItemAction
   ): Portfolio => {
-    if (action.payload.id === "testId") {
-      return [...mockPortfolio];
+    const delItemIdx = state.findIndex((pi) => pi.id === action.payload.id);
+    if (delItemIdx !== -1) {
+      state.splice(delItemIdx, 1);
+      return [...state];
     }
     return state;
   },
