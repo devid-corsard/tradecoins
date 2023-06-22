@@ -16,24 +16,29 @@ export class TradeItemDto {
     this.id = id;
   }
   get spend(): string {
-    return String(
-      (
-        Number(this[TradeItemInputNames.Amount]) *
-        Number(this[TradeItemInputNames.BuyPrice])
-      ).toFixed(2)
-    );
+    const spend =
+      Number(this[TradeItemInputNames.Amount]) *
+      Number(this[TradeItemInputNames.BuyPrice]);
+    if (spend === 0) return "";
+    let afterDotNum = 2;
+    if (spend < 1) afterDotNum = 8;
+    return String(spend.toFixed(afterDotNum));
   }
 
   get recieved(): string {
-    return String(
-      (
-        Number(this[TradeItemInputNames.Amount]) *
-        Number(this[TradeItemInputNames.SellPrice])
-      ).toFixed(2)
-    );
+    const recieved =
+      Number(this[TradeItemInputNames.Amount]) *
+      Number(this[TradeItemInputNames.SellPrice]);
+    if (recieved === 0) return "";
+    let afterDotNum = 2;
+    if (recieved < 1) afterDotNum = 8;
+    return String(recieved.toFixed(afterDotNum));
   }
 
   get difference(): string {
-    return String((Number(this.recieved) - Number(this.spend)).toFixed(2));
+    const difference = Number(this.recieved) - Number(this.spend);
+    let afterDotNum = 2;
+    if (difference < 1 && difference > -1) afterDotNum = 8;
+    return String(difference.toFixed(afterDotNum));
   }
 }
