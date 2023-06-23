@@ -32,7 +32,7 @@ const TradeItem = ({ data }: Props) => {
     dispatch(action);
   };
   return (
-    <div className="flex flex-wrap items-center justify-start rounded-sm border-gray-200 border m-1 md:m-2">
+    <div className="flex flex-wrap items-end justify-start rounded-sm border-amber-600 border m-1 md:m-2 p-1 md:p-2">
       <InputItem
         name="Amount:"
         value={data.amount}
@@ -45,24 +45,24 @@ const TradeItem = ({ data }: Props) => {
         propName={TradeItemInputNames.BuyPrice}
         id={data.id}
       />
-      <SpanItem name="Spend:" value={data.spend} color="pink" />
+      <SpanItem name="Spend:" value={data.spend} />
       <InputItem
         name="Sell price:"
         value={data.sell_price}
         propName={TradeItemInputNames.SellPrice}
         id={data.id}
       />
-      <SpanItem name="Recieved:" value={data.recieved} color="green" />
-      <SpanItem name="Difference:" value={data.difference} color="orange" />
+      <SpanItem name="Recieved:" value={data.recieved} />
+      <SpanItem name="Difference:" value={data.difference} />
       <div className="flex text-xs">
         <button
-          className="m-1 p-1 border bg-red-100 hover:bg-red-200 active:bg-red-400"
+          className="m-1 py-1 px-4 bg-slate-700 text-red-500 border border-amber-500 hover:bg-slate-800 active:bg-amber-700"
           onClick={handleDelete}
         >
           Del
         </button>
         <button
-          className="m-1 p-1 border bg-orange-50 hover:bg-orange-100 active:bg-orange-300"
+          className="m-1 py-1 px-4 bg-slate-700 text-amber-300 border border-amber-500 hover:bg-slate-800 active:bg-amber-700"
           onClick={handleCopy}
         >
           Copy

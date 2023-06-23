@@ -28,9 +28,9 @@ const InputItem = (props: Props) => {
   };
   return (
     <div className="flex flex-col">
-      <p className="text-xs text-left ml-1 text-gray-500">{props.name}</p>
+      <p className="text-xs text-left ml-1 text-slate-500">{props.name}</p>
       <input
-        className="w-28 h-8 rounded-sm p-1 border-solid border m-1"
+        className="w-28 h-8 rounded-sm p-1 m-1 bg-slate-900 text-slate-300 text-center"
         type="number"
         value={props.value}
         onChange={handleChange}

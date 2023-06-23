@@ -10,10 +10,10 @@ const Register = () => {
     dispatch({ type: AuthActionsEnum.Register, payload: formData });
   };
   return (
-    <>
-      <p className="mb-5">Create new account:</p>
-      <LoginRegister onSubmit={handleRegister} />
-    </>
+    <LoginRegister
+      onSubmit={handleRegister}
+      welcomeText="Create new account:"
+    />
   );
 };
 

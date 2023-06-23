@@ -9,7 +9,7 @@ import Portfolio from "./pages/Portfolio";
 
 function App() {
   return (
-    <div className="bg-gray-50 h-full">
+    <div className="h-full flex flex-col items-center">
       <AuthContextProvider>
         <PortfolioContextProvider>
           <Navbar />

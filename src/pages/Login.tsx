@@ -10,10 +10,10 @@ const Login = () => {
     dispatch({ type: AuthActionsEnum.Login, payload: formData });
   };
   return (
-    <>
-      <p className="mb-5">Login into your account:</p>
-      <LoginRegister onSubmit={handleLogin} />
-    </>
+    <LoginRegister
+      onSubmit={handleLogin}
+      welcomeText="Login into your account:"
+    />
   );
 };
 
