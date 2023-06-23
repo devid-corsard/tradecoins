@@ -15,30 +15,41 @@ export class TradeItemDto {
     this[TradeItemInputNames.SellPrice] = s;
     this.id = id;
   }
-  get spend(): string {
-    const spend =
+  private get spendNum(): number {
+    return (
       Number(this[TradeItemInputNames.Amount]) *
-      Number(this[TradeItemInputNames.BuyPrice]);
+      Number(this[TradeItemInputNames.BuyPrice])
+    );
+  }
+
+  private get recievedNum(): number {
+    return (
+      Number(this[TradeItemInputNames.Amount]) *
+      Number(this[TradeItemInputNames.SellPrice])
+    );
+  }
+
+  get spend(): string {
+    const spend = this.spendNum;
     if (spend === 0) return "";
     let afterDotNum = 2;
-    if (spend < 1) afterDotNum = 8;
+    if (spend < 0.01) afterDotNum = 8;
     return String(spend.toFixed(afterDotNum));
   }
 
   get recieved(): string {
-    const recieved =
-      Number(this[TradeItemInputNames.Amount]) *
-      Number(this[TradeItemInputNames.SellPrice]);
+    const recieved = this.recievedNum;
     if (recieved === 0) return "";
     let afterDotNum = 2;
-    if (recieved < 1) afterDotNum = 8;
+    if (recieved < 0.01) afterDotNum = 8;
     return String(recieved.toFixed(afterDotNum));
   }
 
   get difference(): string {
-    const difference = Number(this.recieved) - Number(this.spend);
+    const difference = this.recievedNum - this.spendNum;
+    if (difference === 0) return "0.00";
     let afterDotNum = 2;
-    if (difference < 1 && difference > -1) afterDotNum = 8;
+    if (difference < 0.1 && difference > -0.1) afterDotNum = 8;
     return String(difference.toFixed(afterDotNum));
   }
 }
