@@ -36,13 +36,14 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
+          cache-dependency-path: './client/package-lock.json'
       - name: Install dependencies
         run: |
-          cd /home/runner/work/tradecoins/tradecoins/client
+          cd client
           npm install
       - name: Build
         run: |
-          cd /home/runner/work/tradecoins/tradecoins/client
+          cd client
           npm run build
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.0
