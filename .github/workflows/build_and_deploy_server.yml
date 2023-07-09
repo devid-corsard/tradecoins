@@ -15,14 +15,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-
-    - name: Build binary
-      working-directory: server
-      run: cargo build --release --bin tradecoins-server
+    # - name: Set up Rust
+    #   uses: actions-rs/toolchain@v1
+    #   with:
+    #     toolchain: stable
+    #
+    # - name: Build binary
+    #   working-directory: server
+    #   run: cargo build --release --bin tradecoins-server
 
     - name: Copy binary via SSH
       uses: appleboy/scp-action@v0.1.4
@@ -30,6 +30,7 @@ jobs:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        source: "./server/target/release/tradecoins-server"
-        target: "/home/ubuntu/rustapps/tradecoins_gha/"
+        # source: "./server/target/release/tradecoins-server"
+        source: "./server/configuration, ./server/migrations"
+        target: "/home/ubuntu/rustapps/tradecoins_gha"
 
