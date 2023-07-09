@@ -14,5 +14,20 @@
       }
     },
     "query": "\n        INSERT INTO subscriptions (id, email, name, subscribed_at)\n        VALUES ($1, $2, $3, $4)\n        "
+  },
+  "e47f84111e4309b25165a2901fbdd8f6b486292704d555cc61b4541e6c0781c5": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Text",
+          "Text",
+          "Timestamptz"
+        ]
+      }
+    },
+    "query": "\n        INSERT INTO users (id, name, password, subscribed_at)\n        VALUES ($1, $2, $3, $4)\n        "
   }
 }

@@ -31,5 +31,5 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: "./server/target/release/tradecoins-server"
-        target: "/home/ubuntu/rustapps/tradecoins_gha/tradecoins-server"
+        target: "/home/ubuntu/rustapps/tradecoins_gha/"
 
