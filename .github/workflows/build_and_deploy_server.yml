@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SQLX_OFFLINE: true
 
     steps:
     - name: Checkout code
