@@ -37,11 +37,13 @@ jobs:
           node-version: 18
           cache: 'npm'
       - name: Install dependencies
-        run: npm install
-        working-directory: ./client
+        run: |
+          cd client
+          npm ci
       - name: Build
-        run: npm run build
-        working-directory: ./client
+        run: |
+          cd client
+          npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
