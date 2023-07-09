@@ -32,5 +32,6 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         # source: "./server/target/release/tradecoins-server"
         source: "./server/configuration, ./server/migrations"
-        target: "/home/ubuntu/rustapps/tradecoins_gha"
+        target: "/home/ubuntu/rustapps/tradecoins_gha/"
+        strip_components: 1
 
