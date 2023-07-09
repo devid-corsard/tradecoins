@@ -38,11 +38,11 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: |
-          cd client
+          cd /home/runner/work/tradecoins/tradecoins/client
           npm install
       - name: Build
         run: |
-          cd client
+          cd /home/runner/work/tradecoins/tradecoins/client
           npm run build
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.0
