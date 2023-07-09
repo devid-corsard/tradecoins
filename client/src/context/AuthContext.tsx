@@ -28,7 +28,6 @@ export const AuthContextProvider = ({ children }: Props) => {
             const data = new URLSearchParams();
             data.append("name", action.payload.login);
             data.append("password", action.payload.password);
-            //const user = {name: action.payload.login, password: action.payload.password};
             const res = await axios.post(
               "http://127.0.0.1:8080/register",
               data,
