@@ -39,6 +39,6 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           cd ~/rustapps/tradecoins_gha
-          ./scripts.init_db_prod.sh
+          ./scripts/init_db_prod.sh
 
 
