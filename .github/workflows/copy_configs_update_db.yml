@@ -1,39 +1,28 @@
-name: Build and Deploy Server Binary
+name: Update Server Configs
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'server/src/*'
+      - 'server/*'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      SQLX_OFFLINE: true
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-
-    - name: Build binary
-      working-directory: server
-      run: cargo build --release --bin tradecoins-server
-
-    - name: Copy binary via SSH
+    - name: Copy configs via SSH
       uses: appleboy/scp-action@v0.1.4
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        source: "server/target/release/tradecoins-server"
+        source: "server/configuration, server/migrations, server/scripts"
         target: "/home/ubuntu/rustapps/tradecoins_gha/"
-        strip_components: 3
+        strip_components: 1
         overwrite: true
 
