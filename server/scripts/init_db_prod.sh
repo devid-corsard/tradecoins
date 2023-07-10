@@ -7,13 +7,13 @@ if ! [ -x "$(command -v psql)" ]; then
   exit 1
 fi
 
-if ! [ -x "$(command -v sqlx)" ]; then
-  echo  "Error: sqlx is not installed."
-  echo  "Use:"
-  echo  "    cargo install --version=0.5.7 sqlx-cli --no-default-features --features postgres"
-  echo  "to install it."
-  exit 1
-fi
+# if ! [ -x "$(command -v sqlx)" ]; then
+#   echo  "Error: sqlx is not installed."
+#   echo  "Use:"
+#   echo  "    cargo install --version=0.5.7 sqlx-cli --no-default-features --features postgres"
+#   echo  "to install it."
+#   exit 1
+# fi
 
 until psql -d postgres -c '\c'
 do
