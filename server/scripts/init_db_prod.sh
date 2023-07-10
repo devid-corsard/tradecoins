@@ -15,16 +15,13 @@ if ! [ -x "$(command -v sqlx)" ]; then
   exit 1
 fi
 
-DB_USER=${POSTGRES_USER:=ubuntu}
-DB_PORT="${POSTGRES_PORT:=5432}"
-
-until psql -h "localhost" -U "${DB_USER}" -p "${DB_PORT}" -d "postgres" -c '\q'
+until psql -d postgres -c '\c'
 do
   echo "Postgres is still unavailable - sleeping"
   sleep 1
 done
 
-echo "Postgres is up and running on port ${DB_PORT} - running migrations now!"
+echo "Postgres is up and running - running migrations now!"
 
 sqlx database create
 sqlx migrate run
