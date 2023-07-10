@@ -23,6 +23,7 @@ done
 
 echo "Postgres is up and running - running migrations now!"
 
+cargo install --version=0.5.7 sqlx-cli --no-default-features --features postgres
 sqlx database create
 sqlx migrate run
 
