@@ -46,7 +46,9 @@ jobs:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: ~/rustapps/tradecoins_gha/scripts/init_db_prod.sh
+        script: |
+          cd ~/rustapps/tradecoins_gha
+          cat .env | ./scripts/init_db_prod.sh
 
     - name: Start server
       uses: appleboy/ssh-action@v0.1.10
