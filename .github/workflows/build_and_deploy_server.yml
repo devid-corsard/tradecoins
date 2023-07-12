@@ -21,6 +21,15 @@ jobs:
       SQLX_OFFLINE: true
 
     steps:
+
+    - name: Stop server
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: ~/rustapps/tradecoins_gha/scripts/app_stop.sh
+
     - name: Checkout code
       uses: actions/checkout@v2
 
@@ -43,4 +52,12 @@ jobs:
         target: "/home/ubuntu/rustapps/tradecoins_gha/"
         strip_components: 3
         overwrite: true
+
+    - name: Start server
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: ~/rustapps/tradecoins_gha/scripts/app_start.sh
 
