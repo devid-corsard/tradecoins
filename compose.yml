@@ -1,0 +1,77 @@
+services:
+  postgres:
+    container_name: tradecoins_db
+    image: postgres:15-alpine
+    networks:
+      - database
+    volumes:
+      - type: bind
+        source: ~/db_data/tradecoins
+        target: /var/lib/postgresql/data
+
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PW}
+      - POSTGRES_DB=${POSTGRES_DB} #optional (specify default database instead of $POSTGRES_DB)
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  migration:
+    container_name: sqlx-m
+    build:
+      context: server
+      dockerfile: Dockerfile.sqlx
+    networks:
+      - database
+    volumes:
+      - type: bind
+        source: server/migrations
+        target: /migrations
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  server:
+    container_name: tradecoins-server
+    build:
+      context: server
+      target: runtime
+    networks:
+      - database
+    expose: 
+      - 8080
+    environment:
+      - APP_DATABASE__USERNAME=${POSTGRES_USER}
+      - APP_DATABASE__PASSWORD=${POSTGRES_PW}
+      - APP_DATABASE__HOST=${POSTGRES_HOST}
+      - APP_DATABASE__DATABASE_NAME=${POSTGRES_DB}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  proxy:
+    container_name: nginx-tradecoins
+    image: nginx:alpine
+    networks:
+      - database
+    volumes:
+      - type: bind
+        source: ./nginx/nginx.conf
+        target: /etc/nginx/conf.d/default.conf
+        read_only: true
+    ports:
+      - 84:80
+    depends_on: 
+      - server
+
+        
+
+networks:
+  database:
+    name: postgres-net
