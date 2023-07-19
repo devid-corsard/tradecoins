@@ -2,13 +2,10 @@ services:
   postgres:
     container_name: tradecoins_db
     image: postgres:15-alpine
-    networks:
-      - database
     volumes:
       - type: bind
         source: ~/db_data/tradecoins
         target: /var/lib/postgresql/data
-
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PW}
@@ -25,8 +22,6 @@ services:
     build:
       context: server
       dockerfile: Dockerfile.sqlx
-    networks:
-      - database
     volumes:
       - type: bind
         source: server/migrations
@@ -43,9 +38,9 @@ services:
       context: server
       target: runtime
     networks:
-      - database
-    expose: 
-      - 8080
+      - nginx
+    ports: 
+      - ${APP_PORT}:8080
     environment:
       - APP_DATABASE__USERNAME=${POSTGRES_USER}
       - APP_DATABASE__PASSWORD=${POSTGRES_PW}
@@ -55,36 +50,7 @@ services:
       postgres:
         condition: service_healthy
 
-  proxy:
-    container_name: nginx-tradecoins
-    image: nginx:alpine
-    networks:
-      - database
-    volumes:
-      - type: bind
-        source: ./nginx/nginx.conf
-        target: /etc/nginx/conf.d/default.conf
-        read_only: true
-      - type: bind
-        source: ./certbot/www
-        target: /var/www/certbot
-        read_only: true
-      - ./certbot/conf/:/etc/nginx/ssl/:ro
-    ports:
-      - 80:80
-      - 443:443
-    restart: always
-    depends_on: 
-      - server
-
-  certbot:
-    image: certbot/certbot:latest
-    volumes:
-      - ./certbot/www/:/var/www/certbot/:rw
-      - ./certbot/conf/:/etc/letsencrypt/:rw
-
-        
-
 networks:
-  database:
-    name: postgres-net
+  nginx:
+    name: nginx-all
+    external: true

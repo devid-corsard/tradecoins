@@ -1,6 +1,0 @@
-# renew certs
-docker compose run --rm certbot renew
-# dry run:
-docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ --dry-run -d tradecoins.devidcorsard.pp.ua
-# get certs:
-docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d tradecoins.devidcordard.pp.ua
