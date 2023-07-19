@@ -4,7 +4,7 @@ import { AuthActionsEnum } from "../types/AuthActions";
 
 axios.defaults.baseURL = import.meta.env.DEV
     ? "http://127.0.0.1:8080"
-    : "http://130.162.61.35:84";
+    : "https://tradecoins.devidcorsard.pp.ua";
 
 const authRequests = {
     [AuthActionsEnum.Register](form: FormData) {
