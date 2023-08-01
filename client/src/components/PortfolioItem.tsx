@@ -42,36 +42,24 @@ const PortfolioItem = ({ item }: Props) => {
     dispatch(action);
   };
   return (
-    <div className="lg:w-[900px] md:rounded-md mx-auto flex flex-col items-center gap-4 py-4 px-1 m-4 bg-slate-800 relative">
-      <button
-        className={`
-        py-1 px-4
-        text-red-500 text-xs
-        bg-slate-700 hover:bg-slate-800 active:bg-amber-700
-        border border-amber-500
-        sm:absolute top-2 right-2
-        `}
-        onClick={handleDeleteTradeItem}
-      >
+    <div className="">
+      <button className="" onClick={handleDeleteTradeItem}>
         Del all
       </button>
       <input
         type="text"
         spellCheck={false}
         placeholder="coin name"
-        className="md:w-2/5 w-max rounded-md py-1 px-4 mx-2 bg-slate-900 text-xl text-slate-200 border-2 border-amber-700 placeholder-slate-700"
+        className=""
         value={item.name}
         onChange={handleNameChange}
       />
-      <div className="flex flex-col gap-4">
+      <div className="">
         {item.data.map((data) => (
           <TradeItem data={data} key={data.id} />
         ))}
         <div>
-          <button
-            className="m-1 py-1 px-4 bg-slate-700 text-emerald-500 border border-amber-500 hover:bg-slate-800 active:bg-amber-700"
-            onClick={handleAddNew}
-          >
+          <button className="" onClick={handleAddNew}>
             Add new trade
           </button>
         </div>
