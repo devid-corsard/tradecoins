@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
 import Account from "./Account";
 
-const Navbar = () => {
+const Header = () => {
   return (
-    <div className="">
+    <header>
       <Link to="/">
-        <h1 className="">CryptoPortfolio</h1>
+        <h1>Crypto Portfolio</h1>
       </Link>
       <Account />
-    </div>
+    </header>
   );
 };
 
-export default Navbar;
+export default Header;

@@ -9,30 +9,30 @@ const Account = () => {
     dispatch({ type: AuthActionsEnum.Logout });
   };
   return (
-    <div className="">
-      <p className="">@{currentUser.name}</p>
+    <nav>
+      <h2>@{currentUser.name}</h2>
       {currentUser?.name === "guest" ? (
         <>
           <Link to="login">
-            <button className="">Login</button>
+            <button className="left neutral">Login</button>
           </Link>
           <Link to="register">
-            <button className="">Register</button>
+            <button className="right">Register</button>
           </Link>
         </>
       ) : (
         <div>
+          <Link to="settings">
+            <button className="left neutral">Settings</button>
+          </Link>
           <Link to="/">
-            <button className="" onClick={handleLogOut}>
+            <button className="right bad" onClick={handleLogOut}>
               Log out
             </button>
           </Link>
-          <Link to="settings">
-            <button className="">Settings</button>
-          </Link>
         </div>
       )}
-    </div>
+    </nav>
   );
 };
 

@@ -42,28 +42,23 @@ const PortfolioItem = ({ item }: Props) => {
     dispatch(action);
   };
   return (
-    <div className="">
-      <button className="" onClick={handleDeleteTradeItem}>
-        Del all
-      </button>
+    <div className="portfolio-item">
       <input
         type="text"
         spellCheck={false}
         placeholder="coin name"
-        className=""
         value={item.name}
         onChange={handleNameChange}
       />
-      <div className="">
-        {item.data.map((data) => (
-          <TradeItem data={data} key={data.id} />
-        ))}
-        <div>
-          <button className="" onClick={handleAddNew}>
-            Add new trade
-          </button>
-        </div>
-      </div>
+      <button className="outside bad" onClick={handleDeleteTradeItem}>
+        Del all
+      </button>
+      {item.data.map((data) => (
+        <TradeItem data={data} key={data.id} />
+      ))}
+      <button className="wide" onClick={handleAddNew}>
+        Add new trade
+      </button>
     </div>
   );
 };

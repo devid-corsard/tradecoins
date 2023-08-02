@@ -24,15 +24,15 @@ const Portfolio = () => {
   }, [user.id, dispatch]);
 
   return (
-    <div className="">
-      <span className="">Your trades:</span>
+    <main className="wrapper flow">
+      <h2>Your trades:</h2>
       {portfolio.map((item) => (
         <PortfolioItem item={item} key={item.id} />
       ))}
-      <button className="" onClick={handleAddNew}>
+      <button className="wide" onClick={handleAddNew}>
         Add new coin
       </button>
-    </div>
+    </main>
   );
 };
 

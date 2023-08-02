@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import LoginRegister from "../components/LoginRegister";
+import AccountForm from "../components/AccountForm";
 import { FormData } from "../types/IForm";
 import { AuthContext } from "../context/AuthContext";
 import { AuthActionsEnum } from "../types/AuthActions";
@@ -10,10 +10,7 @@ const Register = () => {
     dispatch({ type: AuthActionsEnum.Register, payload: formData });
   };
   return (
-    <LoginRegister
-      onSubmit={handleRegister}
-      welcomeText="Create new account:"
-    />
+    <AccountForm onSubmit={handleRegister} welcomeText="Create new account:" />
   );
 };
 

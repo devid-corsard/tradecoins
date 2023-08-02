@@ -27,15 +27,10 @@ const InputItem = (props: Props) => {
     dispatch(action);
   };
   return (
-    <div className="">
-      <p className="">{props.name}</p>
-      <input
-        className=""
-        type="number"
-        value={props.value}
-        onChange={handleChange}
-      />
-    </div>
+    <li>
+      <h4>{props.name}</h4>
+      <input type="number" value={props.value} onChange={handleChange} />
+    </li>
   );
 };
 

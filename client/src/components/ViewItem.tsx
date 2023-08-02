@@ -14,10 +14,10 @@ const ViewItem = (props: Props) => {
   if (Number(props.value) < 0) spanBgColor = "bg-red-900";
 
   return (
-    <div>
+    <li>
       <h4>{props.name}</h4>
-      <input disabled value={props.value} />
-    </div>
+      <input type="number" disabled value={props.value} />
+    </li>
   );
 };
 

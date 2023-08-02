@@ -7,7 +7,7 @@ type FormProps = {
   welcomeText: string;
 };
 
-const LoginRegister = ({ onSubmit, welcomeText }: FormProps) => {
+const AccountForm = ({ onSubmit, welcomeText }: FormProps) => {
   const [formData, setFormData] = useState<FormData>({
     login: "",
     password: "",
@@ -24,31 +24,31 @@ const LoginRegister = ({ onSubmit, welcomeText }: FormProps) => {
     navigate("/");
   };
   return (
-    <form onSubmit={handleSubmit} className="">
-      <h1 className="text-lg mb-5">{welcomeText}</h1>
+    <form className="wrapper" onSubmit={handleSubmit}>
+      <h2>{welcomeText}</h2>
       <label>
-        <p>Username:</p>
+        <h3>Username:</h3>
         <input
           onChange={handleInputChange}
           name="login"
           id="login"
           type="text"
-          className=""
         />
       </label>
       <label>
-        <p>Password:</p>
+        <h3>Password:</h3>
         <input
           onChange={handleInputChange}
           name="password"
           id="password"
           type="password"
-          className=""
         />
       </label>
-      <input className="" type="submit" />
+      <button className="wide" type="submit">
+        Submit
+      </button>
     </form>
   );
 };
 
-export default LoginRegister;
+export default AccountForm;
