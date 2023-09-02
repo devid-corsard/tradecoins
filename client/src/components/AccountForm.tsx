@@ -7,7 +7,7 @@ type FormProps = {
   welcomeText: string;
 };
 
-const LoginRegister = ({ onSubmit, welcomeText }: FormProps) => {
+const AccountForm = ({ onSubmit, welcomeText }: FormProps) => {
   const [formData, setFormData] = useState<FormData>({
     login: "",
     password: "",
@@ -24,46 +24,31 @@ const LoginRegister = ({ onSubmit, welcomeText }: FormProps) => {
     navigate("/");
   };
   return (
-    <form
-      onSubmit={handleSubmit}
-      className={`flex flex-col items-center bg-slate-700
-      px-9 py-3 m-3 rounded-lg text-slate-200`}
-    >
-      <h1 className="text-lg mb-5">{welcomeText}</h1>
+    <form className="wrapper" onSubmit={handleSubmit}>
+      <h2>{welcomeText}</h2>
       <label>
-        <p>Username:</p>
+        <h3>Username:</h3>
         <input
           onChange={handleInputChange}
           name="login"
           id="login"
           type="text"
-          className={`
-          w-64 p-2 m-1 rounded-sm mb-5 
-          bg-slate-900 outline-amber-600
-          `}
         />
       </label>
       <label>
-        <p>Password:</p>
+        <h3>Password:</h3>
         <input
           onChange={handleInputChange}
           name="password"
           id="password"
           type="password"
-          className={`
-          w-64 p-2 m-1 rounded-sm mb-5
-          bg-slate-900 outline-amber-600
-          `}
         />
       </label>
-      <input
-        className={`m-1 p-1 px-3 
-        bg-emerald-700 hover:bg-emerald-800 active:bg-emerald-900
-        rounded-sm text-white cursor-pointer`}
-        type="submit"
-      />
+      <button className="wide" type="submit">
+        Submit
+      </button>
     </form>
   );
 };
 
-export default LoginRegister;
+export default AccountForm;

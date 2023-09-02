@@ -1,4 +1,251 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+:root {
+  --clr-text-400: hsl(189, 72%, 93%);
+  --clr-background-300: hsl(219, 43%, 18%);
+  --clr-background-400: hsl(219, 53%, 14%);
+  --clr-background-500: hsl(219, 74%, 9%);
+  --clr-background-600: hsl(219, 74%, 4%);
+  --clr-primary-400: hsl(219, 63%, 64%);
+  --clr-accent-400: hsl(79, 70%, 57%);
+  --clr-accent-600: hsl(79, 50%, 37%);
 
+  --clr-bad: hsl(0, 70%, 40%);
+  --clr-neutral: hsl(40, 70%, 50%);
+  --clr-good: hsl(79, 70%, 50%);
+
+  --ff-base: "Fira Code", monospace;
+
+  --fs-100: clamp(0.61rem, calc(0.6rem + 0.06vw), 0.64rem);
+  --fs-200: clamp(0.73rem, calc(0.7rem + 0.12vw), 0.8rem);
+  --fs-300: clamp(0.88rem, calc(0.83rem + 0.22vw), 1rem);
+  --fs-400: clamp(1.05rem, calc(0.98rem + 0.35vw), 1.25rem);
+  --fs-500: clamp(1.26rem, calc(1.15rem + 0.53vw), 1.56rem);
+  --fs-600: clamp(1.51rem, calc(1.36rem + 0.77vw), 1.95rem);
+  --fs-700: clamp(1.81rem, calc(1.6rem + 1.09vw), 2.44rem);
+  --fs-800: clamp(2.18rem, calc(1.87rem + 1.52vw), 3.05rem);
+
+  --small-gap: 0.5rem;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  color-scheme: dark;
+  min-width: 280px;
+}
+
+body {
+  font-family: var(--ff-base);
+  font-size: var(--fs-400);
+  line-height: 1.7;
+  color: var(--clr-text-400);
+  background-color: var(--clr-background-600);
+}
+
+.wrapper {
+  width: min(100%, calc(70rem + 5 * var(--small-gap)));
+  margin-inline: auto;
+  min-height: calc(100vh - 232px);
+}
+
+.flow > * + * {
+  margin-top: 2rem;
+}
+
+form > * + *,
+main > * + * {
+  margin-top: 1rem;
+}
+
+header,
+footer {
+  min-height: 100px;
+  background-color: var(--clr-background-400);
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+header {
+  border-bottom: 1px solid var(--clr-accent-400);
+  margin-bottom: 1rem;
+}
+
+footer {
+  border-top: 1px solid var(--clr-accent-400);
+  margin-top: 1rem;
+}
+
+main,
+form {
+  background-color: var(--clr-background-400);
+  padding: 1rem 0.5rem;
+  border-radius: 0.5rem;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.1;
+  color: var(--clr-primary-400);
+}
+
+h1 {
+  font-size: var(--fs-500);
+  background-color: var(--clr-accent-400);
+  color: black;
+  width: 100%;
+  max-width: max-content;
+  padding: 0.25rem 1rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+h4 {
+  color: var(--clr-primary-400);
+  font-size: var(--fs-100);
+  font-weight: 600;
+  margin-left: 0.25rem;
+}
+
+button,
+input {
+  font-size: inherit;
+  font-family: inherit;
+  color: inherit;
+}
+
+button {
+  background-color: var(--clr-good);
+  color: black;
+  font-size: var(--fs-300);
+  font-weight: 600;
+  border: none;
+  width: 7rem;
+  padding: 0.25rem 1rem;
+  cursor: pointer;
+  border-radius: 100vh;
+}
+
+button.wide {
+  width: 10rem;
+}
+button.outside {
+  position: absolute;
+  right: 0;
+  top: 0;
+  border-radius: 0 0 0 0.5rem;
+}
+
+input {
+  background-color: var(--clr-background-500);
+  border: 1px solid var(--clr-accent-600);
+  color: var(--clr-text-400);
+  text-align: center;
+  border-radius: 0.25rem;
+}
+
+input:disabled {
+  background-color: var(--clr-background-400);
+}
+
+input[type="number"] {
+  width: 100%;
+}
+
+input[type="text"],
+input[type="password"] {
+  font-size: var(--fs-500);
+  text-align: left;
+  padding: 0.25rem 1rem;
+  width: min(100%, 20rem);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  align-items: end;
+  gap: var(--small-gap);
+  grid-template-columns: repeat(6, 1fr);
+}
+
+form {
+  max-width: max-content;
+  max-height: max-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+label {
+  max-width: max-content;
+  display: block;
+}
+
+@media (max-width: 600px) {
+  ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.portfolio-item {
+  background-color: var(--clr-background-300);
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--clr-primary-400);
+  position: relative;
+  overflow: hidden;
+}
+
+@media (max-width: 600px) {
+  .portfolio-item {
+    padding: 1rem 0.5rem;
+    padding-top: 2rem;
+  }
+}
+
+.trade-item {
+  margin: 1rem 0;
+}
+
+@media (min-width: 900px) {
+  .trade-item {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: end;
+    gap: 0.5rem;
+  }
+}
+
+.buttons-del-copy {
+  width: 14rem;
+  margin-top: 0.5rem;
+  margin-left: auto;
+}
+
+.left {
+  border-radius: 100vh 0 0 100vh;
+}
+
+.right {
+  border-radius: 0 100vh 100vh 0;
+}
+
+.bad {
+  background-color: var(--clr-bad);
+}
+
+.neutral {
+  background-color: var(--clr-neutral);
+}

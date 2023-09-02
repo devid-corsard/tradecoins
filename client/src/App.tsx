@@ -1,26 +1,43 @@
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { AuthContextProvider } from "./context/AuthContext";
 import { PortfolioContextProvider } from "./context/PortfolioContext";
 import Portfolio from "./pages/Portfolio";
+import Layout from "./pages/Layout";
 
+const router = createBrowserRouter(
+  [
+    {
+      id: "root",
+      path: "/",
+      Component: Layout,
+      children: [
+        {
+          index: true,
+          Component: Portfolio,
+        },
+        {
+          path: "login",
+          Component: Login,
+        },
+        {
+          path: "register",
+          Component: Register,
+        },
+      ],
+    },
+  ],
+  { basename: "/tradecoins" }
+);
 function App() {
   return (
-    <div className="h-full flex flex-col items-center">
-      <AuthContextProvider>
-        <PortfolioContextProvider>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Portfolio />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-          </Routes>
-        </PortfolioContextProvider>
-      </AuthContextProvider>
-    </div>
+    <AuthContextProvider>
+      <PortfolioContextProvider>
+        <RouterProvider router={router} />
+      </PortfolioContextProvider>
+    </AuthContextProvider>
   );
 }
 
