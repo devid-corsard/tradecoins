@@ -14,7 +14,7 @@ RUN cargo chef cook --release --recipe-path recipe.json
 COPY . .
 ENV SQLX_OFFLINE true
 # Build our project
-RUN cargo build --release --bin tradecoins-server
+RUN cargo build --release --bin tradecoins
 # Runtime stage
 FROM debian:bullseye-slim AS runtime
 # Install OpenSSL - it is dynamically linked by some of our dependencies
@@ -27,7 +27,7 @@ RUN apt-get update -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
-COPY --from=builder /app/target/release/tradecoins-server tradecoins-server
+COPY --from=builder /app/target/release/tradecoins tradecoins
 COPY configuration configuration
 ENV APP_ENVIRONMENT production
-ENTRYPOINT ["./tradecoins-server"]
+ENTRYPOINT ["./tradecoins"]

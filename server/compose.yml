@@ -1,6 +1,6 @@
 services:
   postgres:
-    container_name: tradecoins_db
+    container_name: ${POSTGRES_HOST}
     image: postgres:15-alpine
     volumes:
       - type: bind
@@ -17,14 +17,24 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    container_name: ${REDIS_HOST}
+    image: redis:7-alpine
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   migration:
-    container_name: sqlx-m
+    container_name: tradecoins-sqlx-m
     build:
-      context: server
+      context: . 
       dockerfile: Dockerfile.sqlx
     volumes:
       - type: bind
-        source: server/migrations
+        source: migrations
         target: /migrations
     environment:
       - DATABASE_URL=${DATABASE_URL}
@@ -35,7 +45,7 @@ services:
   server:
     container_name: tradecoins-server
     build:
-      context: server
+      context: .
       target: runtime
     networks:
       - nginx
@@ -47,11 +57,16 @@ services:
       - APP_DATABASE__PASSWORD=${POSTGRES_PW}
       - APP_DATABASE__HOST=${POSTGRES_HOST}
       - APP_DATABASE__DATABASE_NAME=${POSTGRES_DB}
+      - APP_APPLICATION__BASE_URL=${APP_BASE_URL}
+      - APP_APPLICATION__HMAC_SECRET=${APP_HMAC_SECRET}
+      - APP_REDIS_URI=${REDIS_URI}
     depends_on:
       postgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
 
 networks:
   nginx:
-    name: nginx-all
+    name: nginx-for-all
     external: true

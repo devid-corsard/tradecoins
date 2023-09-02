@@ -9,6 +9,7 @@ use sqlx::{
 pub struct Settings {
     pub database: DatabaseSettings,
     pub application: ApplicationSettings,
+    pub redis_uri: Secret<String>,
 }
 
 #[derive(serde::Deserialize)]
@@ -16,7 +17,8 @@ pub struct ApplicationSettings {
     #[serde(deserialize_with = "deserialize_number_from_string")]
     pub port: u16,
     pub host: String,
-    pub request_origin: String,
+    pub base_url: String,
+    pub hmac_secret: Secret<String>,
 }
 
 #[derive(serde::Deserialize)]
@@ -41,15 +43,13 @@ impl DatabaseSettings {
         PgConnectOptions::new()
             .host(&self.host)
             .username(&self.username)
-            .password(&self.password.expose_secret())
+            .password(self.password.expose_secret())
             .port(self.port)
             .ssl_mode(ssl_mode)
     }
     pub fn with_db(&self) -> PgConnectOptions {
-        let mut options = self.without_db().database(&self.database_name);
-        options.log_statements(tracing::log::LevelFilter::Trace);
-
-        options
+        let options = self.without_db().database(&self.database_name);
+        options.log_statements(tracing::log::LevelFilter::Trace)
     }
 }
 
