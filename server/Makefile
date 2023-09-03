@@ -1,7 +1,10 @@
-.PHONY: inid_db test test_by_name test_with_log_and_name check format_check clippy deny run watch build clean git-check run_compose
+.PHONY: inid_db test test_dbg test_by_name test_with_log_and_name check format_check clippy deny run watch build clean git-check run_compose
 
 test:
 	cargo test
+
+test_dbg:
+	cargo test -- --nocapture
 
 test_by_name:
 	cargo test $(n)
