@@ -1,6 +1,6 @@
 pub struct NewUser {
     pub username: Username,
-    pub password_hash: PasswordHash,
+    pub password: Password,
 }
 
 pub struct Username(String);
@@ -17,15 +17,15 @@ impl AsRef<str> for Username {
     }
 }
 
-pub struct PasswordHash(String);
+pub struct Password(String);
 
-impl PasswordHash {
+impl Password {
     pub fn parse(s: String) -> Result<Self, String> {
         Ok(Self(s))
     }
 }
 
-impl AsRef<str> for PasswordHash {
+impl AsRef<str> for Password {
     fn as_ref(&self) -> &str {
         &self.0
     }

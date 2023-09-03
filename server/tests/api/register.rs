@@ -9,8 +9,7 @@ async fn register_with_valid_data_returns_201_and_json_info() {
     let password = uuid::Uuid::new_v4().to_string();
     let body = serde_json::json!({
         "username": username,
-        "password": &password,
-        "confirm_password": password
+        "password": password,
     });
     let response = app.post_register(&body).await;
     assert_eq!(201, response.status().as_u16());
@@ -26,8 +25,7 @@ async fn register_with_valid_data_creates_a_new_user_record_in_the_db() {
     let password = uuid::Uuid::new_v4().to_string();
     let body = serde_json::json!({
         "username": username,
-        "password": &password,
-        "confirm_password": password
+        "password": password,
     });
     let response = app.post_register(&body).await;
     assert_eq!(201, response.status().as_u16());
@@ -50,23 +48,14 @@ async fn register_with_invalid_form_data_returns_400() {
         (
             serde_json::json!({
                 "username": &username,
-                "confirm_password": &password
             }),
             "Password field is empty",
         ),
         (
             serde_json::json!({
                 "password": &password,
-                "confirm_password": &password
             }),
             "Username field in empty",
-        ),
-        (
-            serde_json::json!({
-                "username": &username,
-                "password": &password
-            }),
-            "Confirm password field is empty",
         ),
     ];
     for (invalid_body, error) in test_cases {
