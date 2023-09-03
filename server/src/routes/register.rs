@@ -1,7 +1,7 @@
 use actix_web::{web, HttpResponse};
 use sqlx::PgPool;
 
-use crate::domain::NewUser;
+use crate::domain::{NewUser, PasswordHash, Username};
 
 #[derive(serde::Deserialize)]
 pub struct FormData {
@@ -20,8 +20,8 @@ impl TryFrom<FormData> for NewUser {
     type Error = String;
 
     fn try_from(form: FormData) -> Result<Self, Self::Error> {
-        let username = form.username;
-        let password_hash = form.password;
+        let username = Username::parse(form.username)?;
+        let password_hash = PasswordHash::parse(form.password)?;
         Ok(NewUser {
             username,
             password_hash,
@@ -55,8 +55,8 @@ async fn insert_user(pool: &PgPool, user: &NewUser) -> Result<uuid::Uuid, anyhow
                  ($1, $2, $3, CURRENT_TIMESTAMP)
                  "#,
         user_id,
-        user.username,
-        user.password_hash
+        user.username.as_ref(),
+        user.password_hash.as_ref()
     )
     .execute(pool)
     .await
