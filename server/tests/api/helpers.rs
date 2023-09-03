@@ -13,7 +13,20 @@ pub struct TestApp {
     pub api_client: reqwest::Client,
 }
 
-impl TestApp {}
+impl TestApp {
+    pub async fn post_register<F>(&self, body: &F) -> reqwest::Response
+    where
+        F: serde::Serialize,
+    {
+        self.api_client
+            .post(&format!("{}/register", &self.address))
+            .header("Content-type", "application/x-www-form-urlencoded")
+            .form(body)
+            .send()
+            .await
+            .expect("Failed to execute a request")
+    }
+}
 
 pub struct TestUser {
     pub user_id: Uuid,

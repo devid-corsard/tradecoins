@@ -1,6 +1,6 @@
 use crate::{
     configuration::{DatabaseSettings, Settings},
-    routes::health_check,
+    routes::{create_user, health_check},
 };
 use actix_session::storage::RedisSessionStore;
 use actix_session::SessionMiddleware;
@@ -79,7 +79,7 @@ async fn run(
             ))
             .route("/health_check", web::get().to(health_check))
             // .route("/login", web::post().to(login))
-            // .route("/register", web::post().to(register))
+            .route("/register", web::post().to(create_user))
             // .service(
             //     web::scope("/user")
             //         .wrap(from_fn(reject_anonymous_users))
