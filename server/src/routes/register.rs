@@ -33,7 +33,15 @@ impl TryFrom<FormData> for NewUser {
     )
 )]
 pub async fn create_user(form: web::Form<FormData>, pool: web::Data<PgPool>) -> HttpResponse {
-    let user = form.0.try_into().unwrap();
+    let user = match form.0.try_into() {
+        Ok(user) => user,
+        Err(e) => {
+            return HttpResponse::BadRequest().json(RegisterResponse {
+                succes: false,
+                messages: Vec::from([e]),
+            })
+        }
+    };
     let _user_id = insert_user(&pool, &user).await;
     HttpResponse::Created().json(RegisterResponse {
         succes: true,
@@ -41,6 +49,7 @@ pub async fn create_user(form: web::Form<FormData>, pool: web::Data<PgPool>) -> 
     })
 }
 
+#[tracing::instrument(name = "Saving new user in the database", skip(pool, user))]
 async fn insert_user(pool: &PgPool, user: &NewUser) -> Result<uuid::Uuid, anyhow::Error> {
     let user_id = uuid::Uuid::new_v4();
     sqlx::query!(

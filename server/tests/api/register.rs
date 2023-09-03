@@ -69,54 +69,43 @@ async fn register_with_invalid_form_data_returns_400() {
     }
 }
 
-// #[tokio::test]
-// async fn register_with_incorrect_data_returns_400_and_json_info() {
-//     let app = spawn_app().await;
-//     let username = uuid::Uuid::new_v4().to_string();
-//     let password = uuid::Uuid::new_v4().to_string();
-//     let wrong_confirm_password = uuid::Uuid::new_v4().to_string();
-//     let min_pass_length = 8;
-//     let min_username_length = 5;
-//     let test_cases = [
-//         (
-//             serde_json::json!({
-//                 "username": &username,
-//                 "password": &password,
-//                 "confirm_password": &wrong_confirm_password
-//             }),
-//             "Passwords didn't match",
-//         ),
-//         (
-//             serde_json::json!({
-//                 "username": &username,
-//                 "password": &password[0..min_pass_length-1],
-//                 "confirm_password": &password[0..min_pass_length-1]
-//             }),
-//             "Password too short",
-//         ),
-//         (
-//             serde_json::json!({
-//                 "username": &username[0..min_username_length-1],
-//                 "password": &password,
-//                 "confirm_password": &password
-//             }),
-//             "Username too short",
-//         ),
-//     ];
-//     for (invalid_body, error) in test_cases {
-//         let response = app.post_register(&invalid_body).await;
-//         assert_eq!(
-//             response.status().as_u16(),
-//             400,
-//             "Didn't send 400 when body is invalid becouse of {}",
-//             error
-//         );
-//         let body = response.json::<RegisterResponse>().await.unwrap();
-//         assert_eq!(false, body.succes);
-//         assert_eq!(1, body.messages.len());
-//     }
-// }
-//
+#[tokio::test]
+async fn register_with_incorrect_data_returns_400_and_json_info() {
+    let app = spawn_app().await;
+    let username = uuid::Uuid::new_v4().to_string();
+    let password = uuid::Uuid::new_v4().to_string();
+    let min_pass_length = 8;
+    let min_username_length = 5;
+    let test_cases = [
+        (
+            serde_json::json!({
+                "username": &username,
+                "password": &password[0..min_pass_length-1],
+            }),
+            "Password too short",
+        ),
+        (
+            serde_json::json!({
+                "username": &username[0..min_username_length-1],
+                "password": &password,
+            }),
+            "Username too short",
+        ),
+    ];
+    for (invalid_body, error) in test_cases {
+        let response = app.post_register(&invalid_body).await;
+        assert_eq!(
+            response.status().as_u16(),
+            400,
+            "Didn't send 400 when body is invalid becouse of {}",
+            error
+        );
+        let body = response.json::<RegisterResponse>().await.unwrap();
+        assert_eq!(false, body.succes);
+        assert_eq!(1, body.messages.len());
+    }
+}
+
 // #[tokio::test]
 // async fn username_must_be_unique() {
 //     let app = spawn_app().await;
