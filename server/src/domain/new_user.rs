@@ -1,3 +1,4 @@
+use secrecy::Secret;
 use unicode_segmentation::UnicodeSegmentation;
 
 pub struct NewUser {
@@ -34,7 +35,7 @@ impl AsRef<str> for Username {
     }
 }
 
-pub struct Password(String);
+pub struct Password(Secret<String>);
 
 impl Password {
     pub fn parse(s: String) -> Result<Self, String> {
@@ -48,13 +49,13 @@ impl Password {
                 Err("Password can't be empty or contain whitespaces only".to_string())
             }
             s if s.graphemes(true).count() > 256 => Err("Password is too long".to_string()),
-            _ => Ok(Self(s)),
+            _ => Ok(Self(Secret::new(s))),
         }
     }
 }
 
-impl AsRef<str> for Password {
-    fn as_ref(&self) -> &str {
+impl AsRef<Secret<String>> for Password {
+    fn as_ref(&self) -> &Secret<String> {
         &self.0
     }
 }
