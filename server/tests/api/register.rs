@@ -136,3 +136,21 @@ async fn register_with_valid_data_creates_new_user_session() {
     let response = app.post_register(&body).await;
     assert!(response.cookies().count() == 1);
 }
+
+#[tokio::test]
+async fn register_fails_if_there_is_a_fatal_db_error() {
+    let app = spawn_app().await;
+    let username = uuid::Uuid::new_v4().to_string();
+    let password = uuid::Uuid::new_v4().to_string();
+    let body = serde_json::json!({
+        "username": username,
+        "password": password,
+    });
+    // sabotage the database:
+    sqlx::query!("ALTER TABLE users DROP COLUMN username;")
+        .execute(&app.db_pool)
+        .await
+        .expect("Failed to sabotage a db");
+    let response = app.post_register(&body).await;
+    assert_eq!(500, response.status().as_u16());
+}

@@ -62,11 +62,20 @@ pub async fn create_user(
             })
         }
     };
-    if username_is_taken(&mut transaction, user.username.as_ref()).await {
-        return HttpResponse::BadRequest().json(RegisterResponse {
-            succes: false,
-            messages: Vec::from(["Username already in use".into()]),
-        });
+    match username_is_taken(&mut transaction, user.username.as_ref()).await {
+        Ok(taken) if taken == true => {
+            return HttpResponse::BadRequest().json(RegisterResponse {
+                succes: false,
+                messages: Vec::from(["Username already in use".into()]),
+            });
+        }
+        Ok(_) => (),
+        Err(_) => {
+            return HttpResponse::InternalServerError().json(RegisterResponse {
+                succes: false,
+                messages: Vec::from(["Failed to handle request.".into()]),
+            })
+        }
     }
     let user_id = match insert_user(&mut transaction, user).await {
         Ok(id) => id,
@@ -80,7 +89,7 @@ pub async fn create_user(
     match transaction
         .commit()
         .await
-        .context("Failed to commit transaction.")
+        // .context("Failed to commit transaction.")
     {
         Ok(_) => {
             session.renew();
@@ -105,21 +114,27 @@ pub async fn create_user(
 }
 
 #[tracing::instrument(
-    name = "Cheking if username alredy exists in the database",
+    name = "Checking if username alredy exists in the database",
     skip(transaction, username)
 )]
-async fn username_is_taken(transaction: &mut Transaction<'_, Postgres>, username: &str) -> bool {
+async fn username_is_taken(
+    transaction: &mut Transaction<'_, Postgres>,
+    username: &str,
+) -> Result<bool, anyhow::Error> {
     let user_exists = sqlx::query!(
         r#" SELECT user_id FROM users WHERE username = $1"#,
         username
     )
     .fetch_optional(&mut **transaction)
     .await
-    .expect("Failed query to check if user already exists");
+    .map_err(|e| {
+        tracing::error!("Failed query to check if user already exists. {}", e);
+        e
+    })?;
     if user_exists.is_some() {
-        return true;
+        return Ok(true);
     }
-    false
+    Ok(false)
 }
 
 #[tracing::instrument(name = "Saving new user in the database", skip(transaction, user))]
@@ -145,7 +160,10 @@ async fn insert_user(
     )
     .execute(&mut **transaction)
     .await
-    .expect("Failed to store new user into database.");
+    .map_err(|e| {
+        tracing::error!("Failed to store new user into database. {}", e);
+        e
+    })?;
     Ok(user_id)
 }
 
