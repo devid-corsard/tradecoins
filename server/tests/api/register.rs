@@ -15,7 +15,7 @@ async fn register_with_valid_data_returns_201_and_json_info() {
     assert_eq!(201, response.status().as_u16());
     let body = response.json::<RegisterResponse>().await.unwrap();
     assert_eq!(true, body.succes);
-    assert_eq!(1, body.messages.len());
+    assert_eq!("Registration successful.", body.messages[0]);
 }
 
 #[tokio::test]
@@ -32,7 +32,7 @@ async fn register_with_valid_data_creates_a_new_user_record_in_the_db() {
     let saved = sqlx::query!("SELECT username, password_hash, user_id FROM users")
         .fetch_one(&app.db_pool)
         .await
-        .expect("Failed to fetch saved subscriptions");
+        .expect("Failed to fetch saved user");
 
     assert_eq!(saved.username, username);
     assert!(!saved.password_hash.is_empty());
@@ -82,14 +82,14 @@ async fn register_with_incorrect_data_returns_400_and_json_info() {
                 "username": &username,
                 "password": &password[0..min_pass_length-1],
             }),
-            "Password too short",
+            "Password length must be at least 8 characters long",
         ),
         (
             serde_json::json!({
                 "username": &username[0..min_username_length-1],
                 "password": &password,
             }),
-            "Username too short",
+            "Username length must be at least 5 characters long",
         ),
     ];
     for (invalid_body, error) in test_cases {
@@ -102,25 +102,24 @@ async fn register_with_incorrect_data_returns_400_and_json_info() {
         );
         let body = response.json::<RegisterResponse>().await.unwrap();
         assert_eq!(false, body.succes);
-        assert_eq!(1, body.messages.len());
+        assert_eq!(error, body.messages[0]);
     }
 }
 
-// #[tokio::test]
-// async fn username_must_be_unique() {
-//     let app = spawn_app().await;
-//     let username = uuid::Uuid::new_v4().to_string();
-//     let password = uuid::Uuid::new_v4().to_string();
-//     let body = serde_json::json!({
-//         "username": username,
-//         "password": &password,
-//         "confirm_password": password
-//     });
-//     app.post_register(&body).await;
-//     let response = app.post_register(&body).await;
-//     assert_eq!(400, response.status().as_u16());
-//     let body = response.json::<RegisterResponse>().await.unwrap();
-//     assert_eq!(false, body.succes);
-//     assert_eq!(1, body.messages.len());
-// }
-//
+#[tokio::test]
+async fn username_must_be_unique() {
+    let app = spawn_app().await;
+    let username = uuid::Uuid::new_v4().to_string();
+    let password = uuid::Uuid::new_v4().to_string();
+    let body = serde_json::json!({
+        "username": username,
+        "password": &password,
+        "confirm_password": password
+    });
+    app.post_register(&body).await;
+    let response = app.post_register(&body).await;
+    assert_eq!(400, response.status().as_u16());
+    let body = response.json::<RegisterResponse>().await.unwrap();
+    assert_eq!(false, body.succes);
+    assert_eq!("Username already in use", body.messages[0]);
+}
