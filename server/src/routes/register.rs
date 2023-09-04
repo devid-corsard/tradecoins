@@ -6,6 +6,7 @@ use sqlx::{PgPool, Postgres, Transaction};
 
 use crate::{
     domain::{NewUser, Password, Username},
+    session_state::TypedSession,
     telemetry::spawn_blocking_with_tracing,
 };
 
@@ -33,12 +34,16 @@ impl TryFrom<FormData> for NewUser {
 
 #[tracing::instrument(
     name = "Reginster new user",
-    skip(form, pool),
+    skip(form, pool,session),
     fields(
         username = %form.username,
     )
 )]
-pub async fn create_user(form: web::Form<FormData>, pool: web::Data<PgPool>) -> HttpResponse {
+pub async fn create_user(
+    form: web::Form<FormData>,
+    pool: web::Data<PgPool>,
+    session: TypedSession,
+) -> HttpResponse {
     let user: NewUser = match form.0.try_into() {
         Ok(user) => user,
         Err(e) => {
@@ -48,16 +53,22 @@ pub async fn create_user(form: web::Form<FormData>, pool: web::Data<PgPool>) -> 
             })
         }
     };
-    // TODO: delete unwrap
-    let mut transaction = pool.begin().await.unwrap();
-    // check_username_dublicate
+    let mut transaction = match pool.begin().await {
+        Ok(t) => t,
+        Err(_) => {
+            return HttpResponse::InternalServerError().json(RegisterResponse {
+                succes: false,
+                messages: Vec::from(["Failed to handle request.".into()]),
+            })
+        }
+    };
     if username_is_taken(&mut transaction, user.username.as_ref()).await {
         return HttpResponse::BadRequest().json(RegisterResponse {
             succes: false,
             messages: Vec::from(["Username already in use".into()]),
         });
     }
-    let _user_id = match insert_user(&mut transaction, user).await {
+    let user_id = match insert_user(&mut transaction, user).await {
         Ok(id) => id,
         Err(_) => {
             return HttpResponse::InternalServerError().json(RegisterResponse {
@@ -71,10 +82,21 @@ pub async fn create_user(form: web::Form<FormData>, pool: web::Data<PgPool>) -> 
         .await
         .context("Failed to commit transaction.")
     {
-        Ok(_) => HttpResponse::Created().json(RegisterResponse {
-            succes: true,
-            messages: Vec::from(["Registration successful.".to_string()]),
-        }),
+        Ok(_) => {
+            session.renew();
+            if session.insert_user_id(user_id).is_err() {
+                // todo: make error more clear to client
+                // now new user is created but not logged in
+                return HttpResponse::InternalServerError().json(RegisterResponse {
+                    succes: false,
+                    messages: Vec::from(["Failed to handle request.".into()]),
+                });
+            }
+            HttpResponse::Created().json(RegisterResponse {
+                succes: true,
+                messages: Vec::from(["Registration successful.".to_string()]),
+            })
+        }
         Err(_) => HttpResponse::InternalServerError().json(RegisterResponse {
             succes: false,
             messages: Vec::from(["Failed to handle request.".into()]),

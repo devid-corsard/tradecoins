@@ -123,3 +123,16 @@ async fn username_must_be_unique() {
     assert_eq!(false, body.succes);
     assert_eq!("Username already in use", body.messages[0]);
 }
+
+#[tokio::test]
+async fn register_with_valid_data_creates_new_user_session() {
+    let app = spawn_app().await;
+    let username = uuid::Uuid::new_v4().to_string();
+    let password = uuid::Uuid::new_v4().to_string();
+    let body = serde_json::json!({
+        "username": username,
+        "password": password,
+    });
+    let response = app.post_register(&body).await;
+    assert!(response.cookies().count() == 1);
+}
