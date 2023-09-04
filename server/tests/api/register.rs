@@ -70,7 +70,7 @@ async fn register_with_invalid_form_data_returns_400() {
 }
 
 #[tokio::test]
-async fn register_with_incorrect_data_returns_400_and_json_info() {
+async fn register_with_incorrect_input_returns_400_and_json_info() {
     let app = spawn_app().await;
     let username = uuid::Uuid::new_v4().to_string();
     let password = uuid::Uuid::new_v4().to_string();
