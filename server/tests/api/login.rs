@@ -39,7 +39,7 @@ async fn login_with_invalid_form_data_returns_400() {
         assert_eq!(
             response.status().as_u16(),
             400,
-            "Didn't send 400 when body is invalid becouse of {}",
+            "Didn't send 400 when body is invalid because of {}",
             error
         );
     }
