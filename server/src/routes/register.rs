@@ -9,6 +9,7 @@ use crate::{
     domain::{NewUser, Password, Username},
     session_state::TypedSession,
     telemetry::spawn_blocking_with_tracing,
+    utils::error_chain_fmt,
 };
 
 #[derive(serde::Deserialize)]
@@ -176,17 +177,4 @@ fn compute_password_hash(password: &Secret<String>) -> Result<Secret<String>, an
     .hash_password(password.expose_secret().as_bytes(), &salt)?
     .to_string();
     Ok(Secret::new(password_hash))
-}
-
-pub fn error_chain_fmt(
-    e: &impl std::error::Error,
-    f: &mut std::fmt::Formatter<'_>,
-) -> std::fmt::Result {
-    writeln!(f, "{}\n", e)?;
-    let mut current = e.source();
-    while let Some(cause) = current {
-        writeln!(f, "Caused by:\n\t{}", cause)?;
-        current = cause.source();
-    }
-    Ok(())
 }

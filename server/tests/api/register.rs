@@ -29,14 +29,17 @@ async fn register_with_valid_data_creates_a_new_user_record_in_the_db() {
     });
     let response = app.post_register(&body).await;
     assert_eq!(201, response.status().as_u16());
-    let saved = sqlx::query!("SELECT username, password_hash, user_id FROM users")
-        .fetch_one(&app.db_pool)
-        .await
-        .expect("Failed to fetch saved user");
-
-    assert_eq!(saved.username, username);
-    assert!(!saved.password_hash.is_empty());
-    assert!(!saved.user_id.is_nil());
+    let saved = sqlx::query!(
+        "SELECT password_hash, user_id FROM users WHERE username = $1",
+        username
+    )
+    .fetch_optional(&app.db_pool)
+    .await
+    .expect("Failed to fetch saved user");
+    assert!(saved.is_some());
+    let user = saved.unwrap();
+    assert!(!user.password_hash.is_empty());
+    assert!(!user.user_id.is_nil());
 }
 
 #[tokio::test]

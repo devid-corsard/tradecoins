@@ -1,3 +1,4 @@
+use argon2::{password_hash::SaltString, Algorithm, Argon2, Params, PasswordHasher, Version};
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use tradecoins::{
     configuration::{get_configuration, DatabaseSettings},
@@ -26,6 +27,19 @@ impl TestApp {
             .await
             .expect("Failed to execute a request")
     }
+
+    pub async fn post_login<F>(&self, body: &F) -> reqwest::Response
+    where
+        F: serde::Serialize,
+    {
+        self.api_client
+            .post(&format!("{}/login", &self.address))
+            .header("Content-type", "application/x-www-form-urlencoded")
+            .form(body)
+            .send()
+            .await
+            .expect("Failed to execute a request")
+    }
 }
 
 pub struct TestUser {
@@ -41,6 +55,33 @@ impl TestUser {
             username: Uuid::new_v4().to_string(),
             password: Uuid::new_v4().to_string(),
         }
+    }
+    async fn store(&self, pool: &PgPool) {
+        let salt = SaltString::generate(&mut rand::thread_rng());
+        let password_hash = Argon2::new(
+            Algorithm::Argon2id,
+            Version::V0x13,
+            Params::new(15000, 2, 1, None).unwrap(),
+        )
+        .hash_password(self.password.as_bytes(), &salt)
+        .unwrap()
+        .to_string();
+        sqlx::query!(
+            "INSERT INTO users (user_id, username, password_hash) VALUES ($1, $2, $3)",
+            self.user_id,
+            self.username,
+            password_hash
+        )
+        .execute(pool)
+        .await
+        .expect("Failed to save test user into DB.");
+    }
+    pub async fn login(&self, app: &TestApp) {
+        let login_body = serde_json::json!({
+            "username": &self.username,
+            "password": &self.password,
+        });
+        app.post_login(&login_body).await;
     }
 }
 
@@ -77,6 +118,7 @@ pub async fn spawn_app() -> TestApp {
         test_user: TestUser::generate(),
         api_client: client,
     };
+    test_app.test_user.store(&test_app.db_pool).await;
     test_app
 }
 

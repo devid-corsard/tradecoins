@@ -1,6 +1,6 @@
 use crate::{
     configuration::{DatabaseSettings, Settings},
-    routes::{create_user, health_check},
+    routes::{create_user, health_check, login, logout},
 };
 use actix_session::storage::RedisSessionStore;
 use actix_session::SessionMiddleware;
@@ -78,14 +78,14 @@ async fn run(
                 secret_key.clone(),
             ))
             .route("/health_check", web::get().to(health_check))
-            // .route("/login", web::post().to(login))
+            .route("/login", web::post().to(login))
             .route("/register", web::post().to(create_user))
-            // .service(
-            //     web::scope("/user")
-            //         .wrap(from_fn(reject_anonymous_users))
-            //         .route("/password", web::post().to(change_password))
-            //         .route("/logout", web::post().to(logout)),
-            // )
+            .service(
+                web::scope("/user")
+                    //         .wrap(from_fn(reject_anonymous_users))
+                    //         .route("/password", web::post().to(change_password))
+                    .route("/logout", web::post().to(logout)),
+            )
             .app_data(db_pool.clone())
             .app_data(base_url.clone())
             .app_data(hmac_secret.clone())
