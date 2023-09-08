@@ -1,11 +1,14 @@
 use crate::{
+    authentication::reject_anonymous_users,
     configuration::{DatabaseSettings, Settings},
-    routes::{create_user, health_check, login, logout},
+    routes::{create_user, health_check, info, login, logout},
 };
+use actix_files::Files;
 use actix_session::storage::RedisSessionStore;
 use actix_session::SessionMiddleware;
-use actix_web::cookie::Key;
+use actix_web::{cookie::Key, HttpResponse};
 use actix_web::{dev::Server, web, App, HttpServer};
+use actix_web_lab::middleware::from_fn;
 use secrecy::{ExposeSecret, Secret};
 use sqlx::{postgres::PgPoolOptions, PgPool};
 use std::net::TcpListener;
@@ -58,6 +61,12 @@ pub struct ApplicationBaseUrl(pub String);
 #[derive(Clone)]
 pub struct HmacSecret(pub Secret<String>);
 
+async fn react() -> HttpResponse {
+    HttpResponse::Ok()
+        .content_type("text/html")
+        .body(include_str!("../../client/dist/index.html"))
+}
+
 async fn run(
     listener: TcpListener,
     db_pool: PgPool,
@@ -73,19 +82,27 @@ async fn run(
     let server = HttpServer::new(move || {
         App::new()
             .wrap(TracingLogger::default())
-            .wrap(SessionMiddleware::new(
-                redis_store.clone(),
-                secret_key.clone(),
-            ))
-            .route("/health_check", web::get().to(health_check))
-            .route("/login", web::post().to(login))
-            .route("/register", web::post().to(create_user))
-            .service(
-                web::scope("/user")
-                    //         .wrap(from_fn(reject_anonymous_users))
-                    //         .route("/password", web::post().to(change_password))
-                    .route("/logout", web::post().to(logout)),
+            .wrap(
+                SessionMiddleware::builder(redis_store.clone(), secret_key.clone())
+                    .cookie_same_site(actix_web::cookie::SameSite::None)
+                    .build(),
             )
+            .route("/health_check", web::get().to(health_check))
+            .service(
+                web::scope("/api")
+                    .route("/login", web::post().to(login))
+                    .route("/register", web::post().to(create_user))
+                    .service(
+                        web::scope("/user")
+                            .wrap(from_fn(reject_anonymous_users))
+                            //         .route("/password", web::post().to(change_password))
+                            .route("/info", web::get().to(info))
+                            .route("/logout", web::post().to(logout)),
+                    ),
+            )
+            .route("/login", web::get().to(react))
+            .route("/register", web::get().to(react))
+            .service(Files::new("/", "../client/dist").index_file("index.html"))
             .app_data(db_pool.clone())
             .app_data(base_url.clone())
             .app_data(hmac_secret.clone())

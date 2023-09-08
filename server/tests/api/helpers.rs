@@ -20,7 +20,7 @@ impl TestApp {
         F: serde::Serialize,
     {
         self.api_client
-            .post(&format!("{}/register", &self.address))
+            .post(&format!("{}/api/register", &self.address))
             .header("Content-type", "application/x-www-form-urlencoded")
             .form(body)
             .send()
@@ -33,7 +33,7 @@ impl TestApp {
         F: serde::Serialize,
     {
         self.api_client
-            .post(&format!("{}/login", &self.address))
+            .post(&format!("{}/api/login", &self.address))
             .header("Content-type", "application/x-www-form-urlencoded")
             .form(body)
             .send()
