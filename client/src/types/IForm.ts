@@ -3,6 +3,6 @@ export interface FormProps {
 }
 
 export interface FormData {
-  login: string;
+  username: string;
   password: string;
 }

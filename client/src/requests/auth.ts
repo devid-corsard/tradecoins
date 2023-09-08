@@ -2,20 +2,26 @@ import axios from "axios";
 import { FormData } from "../types/IForm";
 import { AuthActionsEnum } from "../types/AuthActions";
 
-axios.defaults.baseURL = import.meta.env.DEV
-    ? "http://127.0.0.1:8080"
-    : "https://tradecoins.devidcorsard.pp.ua";
+const API = "/api";
 
 const authRequests = {
-    [AuthActionsEnum.Register](form: FormData) {
-        const data = new URLSearchParams();
-        data.append("name", form.login);
-        data.append("password", form.password);
-        axios
-            .post("/register", data)
-            .catch(console.log)
-            .then(console.log);
-    }
-}
+  [AuthActionsEnum.Register](form: FormData) {
+    const data = new URLSearchParams();
+    data.append("username", form.username);
+    data.append("password", form.password);
+    axios.post(`${API}/register`, data).catch(console.log).then(console.log);
+  },
+  [AuthActionsEnum.Login](form: FormData) {
+    const data = new URLSearchParams();
+    data.append("username", form.username);
+    data.append("password", form.password);
+    axios.post(`${API}/login`, data).catch(console.log).then(console.log);
+  },
+  [AuthActionsEnum.Logout]() {
+    fetch(`${API}/user/info`, {
+      method: "GET",
+    });
+  },
+};
 
 export default authRequests;

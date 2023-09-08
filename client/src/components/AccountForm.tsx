@@ -9,7 +9,7 @@ type FormProps = {
 
 const AccountForm = ({ onSubmit, welcomeText }: FormProps) => {
   const [formData, setFormData] = useState<FormData>({
-    login: "",
+    username: "",
     password: "",
   });
   const navigate = useNavigate();
@@ -30,8 +30,8 @@ const AccountForm = ({ onSubmit, welcomeText }: FormProps) => {
         <h3>Username:</h3>
         <input
           onChange={handleInputChange}
-          name="login"
-          id="login"
+          name="username"
+          id="username"
           type="text"
         />
       </label>
