@@ -1,12 +1,12 @@
 import { useContext } from "react";
 import AccountForm from "../components/AccountForm";
-import { FormData } from "../types/IForm";
 import { AuthContext } from "../context/AuthContext";
-import { AuthActionsEnum } from "../types/AuthActions";
+import { AuthActionsEnum } from "../context/AuthActions";
+import { Credentials } from "../types/Credentials";
 
 const Login = () => {
   const { dispatch } = useContext(AuthContext);
-  const handleLogin = (formData: FormData) => {
+  const handleLogin = (formData: Credentials) => {
     dispatch({ type: AuthActionsEnum.Login, payload: formData });
   };
   return (

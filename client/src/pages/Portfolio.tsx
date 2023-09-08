@@ -3,7 +3,7 @@ import { PortfolioContext } from "../context/PortfolioContext";
 import {
   AddNewPortfolioItemAction,
   PortfolioActionsEnum,
-} from "../types/PortfolioActions";
+} from "../context/PortfolioActions";
 import { AuthContext } from "../context/AuthContext";
 import PortfolioItem from "../components/PortfolioItem";
 

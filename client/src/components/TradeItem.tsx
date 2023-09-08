@@ -8,7 +8,7 @@ import {
   CopyTradeAction,
   DeleteTradeAction,
   PortfolioActionsEnum,
-} from "../types/PortfolioActions";
+} from "../context/PortfolioActions";
 import { TradeItemDto, TradeItemInputNames } from "../dto/TradeItemDto";
 
 type Props = {

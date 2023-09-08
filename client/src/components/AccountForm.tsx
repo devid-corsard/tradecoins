@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FormData } from "../types/IForm";
+import { Credentials } from "../types/Credentials";
 
 type FormProps = {
-  onSubmit: (data: FormData) => void;
+  onSubmit: (data: Credentials) => void;
   welcomeText: string;
 };
 
 const AccountForm = ({ onSubmit, welcomeText }: FormProps) => {
-  const [formData, setFormData] = useState<FormData>({
+  const [credentials, setCredentials] = useState<Credentials>({
     username: "",
     password: "",
   });
@@ -16,11 +16,11 @@ const AccountForm = ({ onSubmit, welcomeText }: FormProps) => {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
+    setCredentials({ ...credentials, [name]: value });
   };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onSubmit(formData);
+    onSubmit(credentials);
     navigate("/");
   };
   return (

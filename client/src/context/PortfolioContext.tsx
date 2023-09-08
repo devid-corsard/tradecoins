@@ -1,14 +1,19 @@
-import { ReactNode, createContext, useReducer } from "react";
+import { Dispatch, ReactNode, createContext, useReducer } from "react";
 import PortfolioItemType from "../types/PortfolioItemType";
-import { PortfolioContextType } from "../types/PortfolioContextType";
-import { INITIAL_PORTFOLIO } from "./inits";
-import { PortfolioActionTypesUnion } from "../types/PortfolioActions";
-import portfolioReducerHandler from "../utils/portfolioReducer";
+import { PortfolioActionTypesUnion } from "./PortfolioActions";
+import portfolioReducerHandler from "./portfolioReducer";
+
+export type PortfolioContextType = {
+  portfolio: PortfolioItemType[];
+  dispatch: Dispatch<PortfolioActionTypesUnion>;
+};
+
+export const INITIAL_PORTFOLIO: PortfolioItemType[] = [];
 
 export const PortfolioContext = createContext<PortfolioContextType>({
   portfolio: INITIAL_PORTFOLIO,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  dispatch: () => { },
+  dispatch: () => {},
 });
 
 type Props = { children: ReactNode };

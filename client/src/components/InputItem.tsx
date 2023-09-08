@@ -3,7 +3,7 @@ import { PortfolioContext } from "../context/PortfolioContext";
 import {
   PortfolioActionsEnum,
   UpdateTradeInput,
-} from "../types/PortfolioActions";
+} from "../context/PortfolioActions";
 import { TradeItemInputNames } from "../dto/TradeItemDto";
 
 type Props = {

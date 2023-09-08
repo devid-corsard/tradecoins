@@ -1,4 +1,3 @@
-import { INITIAL_PORTFOLIO } from "../context/inits";
 import { TradeItemDto, TradeItemInputNames } from "../dto/TradeItemDto";
 import { mockPortfolio } from "../mockData";
 import {
@@ -11,8 +10,9 @@ import {
   PortfolioActionsEnum,
   UpdateNameAction,
   UpdateTradeInput,
-} from "../types/PortfolioActions";
+} from "./PortfolioActions";
 import PortfolioItemType from "../types/PortfolioItemType";
+import { INITIAL_PORTFOLIO } from "./PortfolioContext";
 
 type Portfolio = PortfolioItemType[];
 

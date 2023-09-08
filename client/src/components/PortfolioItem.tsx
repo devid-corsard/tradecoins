@@ -6,7 +6,7 @@ import {
   DeletePortfolioItemAction,
   PortfolioActionsEnum,
   UpdateNameAction,
-} from "../types/PortfolioActions";
+} from "../context/PortfolioActions";
 import PortfolioItemType from "../types/PortfolioItemType";
 
 type Props = {
