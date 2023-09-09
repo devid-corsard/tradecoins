@@ -1,39 +1,38 @@
 import { useContext, useEffect } from "react";
 import { PortfolioContext } from "../context/PortfolioContext";
 import {
-  AddNewPortfolioItemAction,
-  PortfolioActionsEnum,
+    AddNewPortfolioItemAction,
+    PortfolioActionsEnum,
 } from "../context/PortfolioActions";
 import { AuthContext } from "../context/AuthContext";
 import PortfolioItem from "../components/PortfolioItem";
 
 const Portfolio = () => {
-  const { portfolio, dispatch } = useContext(PortfolioContext);
-  const { user } = useContext(AuthContext);
-  const handleAddNew = () => {
-    const action: AddNewPortfolioItemAction = {
-      type: PortfolioActionsEnum.addNewPortfolioItem,
+    const { portfolio, dispatch } = useContext(PortfolioContext);
+    const { auth } = useContext(AuthContext);
+    const handleAddNew = () => {
+        const action: AddNewPortfolioItemAction = {
+            type: PortfolioActionsEnum.addNewPortfolioItem,
+        };
+        dispatch(action);
     };
-    dispatch(action);
-  };
-  useEffect(() => {
-    dispatch({
-      type: PortfolioActionsEnum.getPortfolio,
-      payload: { id: user.id },
-    });
-  }, [user.id, dispatch]);
+    useEffect(() => {
+        dispatch({
+            type: PortfolioActionsEnum.getPortfolio,
+        });
+    }, [auth.authorized, dispatch]);
 
-  return (
-    <main className="wrapper flow">
-      <h2>Your trades:</h2>
-      {portfolio.map((item) => (
-        <PortfolioItem item={item} key={item.id} />
-      ))}
-      <button className="wide" onClick={handleAddNew}>
-        Add new coin
-      </button>
-    </main>
-  );
+    return (
+        <main className="wrapper flow">
+            <h2>Your trades:</h2>
+            {portfolio.map((item) => (
+                <PortfolioItem item={item} key={item.id} />
+            ))}
+            <button className="wide" onClick={handleAddNew}>
+                Add new coin
+            </button>
+        </main>
+    );
 };
 
 export default Portfolio;

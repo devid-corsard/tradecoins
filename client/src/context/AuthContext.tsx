@@ -2,6 +2,7 @@ import {
     Dispatch,
     ReactNode,
     createContext,
+    useEffect,
     useReducer,
     useState,
 } from "react";
@@ -9,21 +10,7 @@ import User from "../types/User";
 import { AuthActions, AuthActionsEnum } from "./AuthActions";
 import authRequests from "../requests/auth";
 
-export type AuthContextType = {
-    user: User;
-    dispatch: Dispatch<AuthActions>;
-    authorized: boolean;
-    setAuthorized: Dispatch<React.SetStateAction<boolean>>;
-};
-
 export const INITIAL_USER: User = { name: "guest", id: "" };
-
-export const AuthContext = createContext<AuthContextType>({
-    user: INITIAL_USER,
-    dispatch: () => {},
-    authorized: false,
-    setAuthorized: () => {},
-});
 
 const API = "/api";
 
@@ -55,13 +42,53 @@ const userReducer = (state: User, action: AuthActions): User => {
     }
 };
 
+/////////////////////////// new fresh and simple implementation
+type AuthState = {
+    authorized: boolean;
+    username: string;
+};
+
+export type AuthContextType = {
+    auth: AuthState;
+    setAuth: Dispatch<React.SetStateAction<AuthState>>;
+};
+
+const INITIAL_AUTH: AuthState = {
+    authorized: false,
+    username: "guest",
+};
+
+export const AuthContext = createContext<AuthContextType>({
+    auth: INITIAL_AUTH,
+    setAuth: () => {},
+});
+
+async function getUser<TResponse>(): Promise<TResponse | undefined> {
+    try {
+        const response = await fetch("/api/user/info", { method: "GET" });
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const user = await response.json();
+        const currentUser = {
+            name: user.username,
+            id: user.user_id,
+        };
+        return currentUser as TResponse;
+    } catch (error) {
+        console.error("Fetch error:", error);
+    }
+}
 export const AuthContextProvider = ({ children }: Props) => {
-    const [user, dispatch] = useReducer(userReducer, INITIAL_USER);
-    const [authorized, setAuthorized] = useState(false);
+    const [auth, setAuth] = useState<AuthState>(INITIAL_AUTH);
+    useEffect(() => {
+        getUser<User>().then((user) => {
+            console.log("use effect: ", user);
+            if (user) setAuth({ authorized: true, username: user.name });
+        });
+    }, [auth.authorized]);
     return (
-        <AuthContext.Provider
-            value={{ user, dispatch, authorized, setAuthorized }}
-        >
+        <AuthContext.Provider value={{ auth, setAuth }}>
             {children}
         </AuthContext.Provider>
     );

@@ -8,34 +8,35 @@ import Portfolio from "./pages/Portfolio";
 import Layout from "./pages/Layout";
 
 const router = createBrowserRouter([
-  {
-    id: "root",
-    path: "/",
-    Component: Layout,
-    children: [
-      {
-        index: true,
-        Component: Portfolio,
-      },
-      {
-        path: "login",
-        Component: Login,
-      },
-      {
-        path: "register",
-        Component: Register,
-      },
-    ],
-  },
+    {
+        id: "root",
+        path: "/",
+        Component: Layout,
+        children: [
+            {
+                index: true,
+                Component: Portfolio,
+            },
+            {
+                path: "login",
+                Component: Login,
+            },
+            {
+                path: "register",
+                Component: Register,
+            },
+        ],
+    },
 ]);
+
 function App() {
-  return (
-    <AuthContextProvider>
-      <PortfolioContextProvider>
-        <RouterProvider router={router} />
-      </PortfolioContextProvider>
-    </AuthContextProvider>
-  );
+    return (
+        <AuthContextProvider>
+            <PortfolioContextProvider>
+                <RouterProvider router={router} />
+            </PortfolioContextProvider>
+        </AuthContextProvider>
+    );
 }
 
 export default App;

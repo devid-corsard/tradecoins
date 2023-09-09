@@ -1,14 +1,37 @@
 import { useContext } from "react";
 import AccountForm from "../components/AccountForm";
 import { AuthContext } from "../context/AuthContext";
-import { AuthActionsEnum } from "../context/AuthActions";
 import { Credentials } from "../types/Credentials";
 
+async function loginRequest<TResponse>(
+    credentials: Credentials
+): Promise<TResponse | undefined> {
+    try {
+        const data = new URLSearchParams();
+        data.append("username", credentials.username);
+        data.append("password", credentials.password);
+        const response = await fetch("/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type":
+                    "application/x-www-form-urlencoded;charset=UTF-8",
+            },
+            body: data,
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Fetch error:", error);
+    }
+}
 const Login = () => {
-    const { dispatch, setAuthorized } = useContext(AuthContext);
+    const { setAuth } = useContext(AuthContext);
     const handleLogin = (formData: Credentials) => {
-        dispatch({ type: AuthActionsEnum.Login, payload: formData });
-        setAuthorized(true);
+        loginRequest(formData).then(() =>
+            setAuth({ authorized: true, username: formData.username })
+        );
     };
     return (
         <AccountForm
