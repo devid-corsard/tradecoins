@@ -1,25 +1,36 @@
-import axios from "axios";
 import { AuthActionsEnum } from "../context/AuthActions";
 import { Credentials } from "../types/Credentials";
 
 const API = "/api";
 
 const authRequests = {
-  [AuthActionsEnum.Register](form: Credentials) {
+  async [AuthActionsEnum.Register](form: Credentials) {
     const data = new URLSearchParams();
     data.append("username", form.username);
     data.append("password", form.password);
-    axios.post(`${API}/register`, data).catch(console.log).then(console.log);
+    fetch(`${API}/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+      },
+      body: data,
+    });
   },
-  [AuthActionsEnum.Login](form: Credentials) {
+  async [AuthActionsEnum.Login](form: Credentials) {
     const data = new URLSearchParams();
     data.append("username", form.username);
     data.append("password", form.password);
-    axios.post(`${API}/login`, data).catch(console.log).then(console.log);
+    fetch(`${API}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+      },
+      body: data,
+    });
   },
-  [AuthActionsEnum.Logout]() {
-    fetch(`${API}/user/info`, {
-      method: "GET",
+  async [AuthActionsEnum.Logout]() {
+    fetch(`${API}/user/logout`, {
+      method: "POST",
     });
   },
 };
