@@ -14,7 +14,7 @@ async fn register_with_valid_data_returns_201_and_json_info() {
     let response = app.post_register(&body).await;
     assert_eq!(201, response.status().as_u16());
     let body = response.json::<RegisterResponse>().await.unwrap();
-    assert_eq!(true, body.succes);
+    assert_eq!(true, body.success);
     assert_eq!("Registration successful.", body.messages[0]);
 }
 
@@ -104,7 +104,7 @@ async fn register_with_incorrect_input_returns_400_and_json_info() {
             error
         );
         let body = response.json::<RegisterResponse>().await.unwrap();
-        assert_eq!(false, body.succes);
+        assert_eq!(false, body.success);
         assert_eq!(error, body.messages[0]);
     }
 }
@@ -123,7 +123,7 @@ async fn username_must_be_unique() {
     let response = app.post_register(&body).await;
     assert_eq!(400, response.status().as_u16());
     let body = response.json::<RegisterResponse>().await.unwrap();
-    assert_eq!(false, body.succes);
+    assert_eq!(false, body.success);
     assert_eq!("Username already in use", body.messages[0]);
 }
 

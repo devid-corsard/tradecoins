@@ -17,7 +17,7 @@ pub struct FormData {
 
 #[derive(serde::Deserialize, serde::Serialize)]
 pub struct LoginResponse {
-    pub succes: bool,
+    pub success: bool,
     pub messages: Vec<String>,
 }
 
@@ -57,7 +57,7 @@ pub async fn login(
                 .insert_user_id(user_id)
                 .map_err(|e| error_response(LoginError::UnexpectedError(e.into())))?;
             Ok(HttpResponse::Ok().json(LoginResponse {
-                succes: true,
+                success: true,
                 messages: Vec::from(["Login successful.".into()]),
             }))
         }
@@ -84,7 +84,7 @@ fn error_response(e: LoginError) -> InternalError<LoginError> {
         }
     };
     let response = HttpResponse::build(status).json(LoginResponse {
-        succes: false,
+        success: false,
         messages: Vec::from([error_str]),
     });
     InternalError::from_response(e, response)

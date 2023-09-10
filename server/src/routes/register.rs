@@ -20,7 +20,7 @@ pub struct FormData {
 
 #[derive(serde::Deserialize, serde::Serialize)]
 pub struct RegisterResponse {
-    pub succes: bool,
+    pub success: bool,
     pub messages: Vec<String>,
 }
 
@@ -61,13 +61,13 @@ impl ResponseError for CreationError {
         match self {
             CreationError::ValidationError(e) => {
                 HttpResponse::build(self.status_code()).json(RegisterResponse {
-                    succes: false,
+                    success: false,
                     messages: Vec::from([e.to_owned()]),
                 })
             }
             CreationError::UnexpectedError(_) => {
                 HttpResponse::build(self.status_code()).json(RegisterResponse {
-                    succes: false,
+                    success: false,
                     messages: Vec::from(["Failed to handle request.".into()]),
                 })
             }
@@ -104,7 +104,7 @@ pub async fn create_user(
         .is_err()
     {
         return Ok(HttpResponse::Created().json(RegisterResponse {
-            succes: true,
+            success: true,
             messages: Vec::from([
                 "Registration successful.".into(),
                 "You need to login".into(),
@@ -112,7 +112,7 @@ pub async fn create_user(
         }));
     };
     Ok(HttpResponse::Created().json(RegisterResponse {
-        succes: true,
+        success: true,
         messages: Vec::from(["Registration successful.".into()]),
     }))
 }

@@ -13,7 +13,7 @@ async fn login_with_valid_data_returns_200_and_json_info() {
     let response = app.post_login(&body).await;
     assert_eq!(200, response.status().as_u16());
     let body = response.json::<LoginResponse>().await.unwrap();
-    assert_eq!(true, body.succes);
+    assert_eq!(true, body.success);
     assert_eq!("Login successful.", body.messages[0]);
 }
 
@@ -75,7 +75,7 @@ async fn login_with_incorrect_input_returns_400_and_json_info() {
             error
         );
         let body = response.json::<LoginResponse>().await.unwrap();
-        assert_eq!(false, body.succes);
+        assert_eq!(false, body.success);
         assert_eq!(error, body.messages[0]);
     }
 }
