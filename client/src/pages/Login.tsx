@@ -2,34 +2,13 @@ import { useContext } from "react";
 import AccountForm from "../components/AccountForm";
 import { AuthContext } from "../context/AuthContext";
 import { Credentials } from "../types/Credentials";
+import useUserRequests from "../hooks/useUserRequests";
 
-async function loginRequest<TResponse>(
-    credentials: Credentials
-): Promise<TResponse | undefined> {
-    try {
-        const data = new URLSearchParams();
-        data.append("username", credentials.username);
-        data.append("password", credentials.password);
-        const response = await fetch("/api/login", {
-            method: "POST",
-            headers: {
-                "Content-Type":
-                    "application/x-www-form-urlencoded;charset=UTF-8",
-            },
-            body: data,
-        });
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return await response.json();
-    } catch (error) {
-        console.error("Fetch error:", error);
-    }
-}
 const Login = () => {
     const { setAuth } = useContext(AuthContext);
+    const { postLogin } = useUserRequests();
     const handleLogin = (formData: Credentials) => {
-        loginRequest(formData).then(() =>
+        postLogin(formData).then(() =>
             setAuth({ authorized: true, username: formData.username })
         );
     };

@@ -1,40 +1,12 @@
-"use client";
 import { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import User from "../types/User";
-
-async function postLogout<TResponse>(): Promise<TResponse | undefined> {
-    try {
-        const response = await fetch("/api/user/logout", { method: "post" });
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return await response.json();
-    } catch (error) {
-        console.error("Fetch error:", error);
-    }
-}
-
-async function getUserInfo<TResponse>(): Promise<TResponse | undefined> {
-    try {
-        const response = await fetch("/api/user/info", { method: "GET" });
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const user = await response.json();
-        const currentUser = {
-            name: user.username,
-            id: user.user_id,
-        };
-        return currentUser as TResponse;
-    } catch (error) {
-        console.error("Fetch error:", error);
-    }
-}
+import useUserRequests from "../hooks/useUserRequests";
 
 const Account = () => {
     const { auth, setAuth } = useContext(AuthContext);
+    const { getUserInfo, postLogout } = useUserRequests();
     useEffect(() => {
         getUserInfo<User>().then((user) => {
             console.log("use effect: ", user);
