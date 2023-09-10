@@ -11,7 +11,7 @@ struct Info {
 pub async fn info(
     pool: web::Data<PgPool>,
     user_id: web::ReqData<UserId>,
-    _session: TypedSession,
+    session: TypedSession,
 ) -> HttpResponse {
     let user_id = user_id.into_inner();
     let row = sqlx::query!("SELECT username FROM users WHERE user_id = $1", *user_id)
@@ -21,6 +21,7 @@ pub async fn info(
         .expect("Fetch is fucked");
     let username = row.username;
 
+    session.renew();
     HttpResponse::Ok().json(Info {
         user_id: *user_id,
         username,
