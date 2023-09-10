@@ -1,9 +1,10 @@
 "use client";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import User from "../types/User";
 
-async function logoutRequest<TResponse>(): Promise<TResponse | undefined> {
+async function postLogout<TResponse>(): Promise<TResponse | undefined> {
     try {
         const response = await fetch("/api/user/logout", { method: "post" });
         if (!response.ok) {
@@ -15,10 +16,33 @@ async function logoutRequest<TResponse>(): Promise<TResponse | undefined> {
     }
 }
 
+async function getUserInfo<TResponse>(): Promise<TResponse | undefined> {
+    try {
+        const response = await fetch("/api/user/info", { method: "GET" });
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const user = await response.json();
+        const currentUser = {
+            name: user.username,
+            id: user.user_id,
+        };
+        return currentUser as TResponse;
+    } catch (error) {
+        console.error("Fetch error:", error);
+    }
+}
+
 const Account = () => {
     const { auth, setAuth } = useContext(AuthContext);
+    useEffect(() => {
+        getUserInfo<User>().then((user) => {
+            console.log("use effect: ", user);
+            if (user) setAuth({ authorized: true, username: user.name });
+        });
+    }, [auth.authorized]);
     const handleLogOut = () => {
-        logoutRequest().then(() => {
+        postLogout().then(() => {
             setAuth({ authorized: false, username: "guest" });
         });
     };
