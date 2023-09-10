@@ -1,21 +1,22 @@
 import { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import User from "../types/User";
 import useUserRequests from "../hooks/useUserRequests";
 
 const Account = () => {
     const { auth, setAuth } = useContext(AuthContext);
     const { getUserInfo, postLogout } = useUserRequests();
     useEffect(() => {
-        getUserInfo<User>().then((user) => {
+        getUserInfo().then((user) => {
             console.log("use effect: ", user);
             if (user) setAuth({ authorized: true, username: user.name });
         });
     }, [auth.authorized]);
     const handleLogOut = () => {
-        postLogout().then(() => {
-            setAuth({ authorized: false, username: "guest" });
+        postLogout().then((res) => {
+            if (res) {
+                setAuth({ authorized: false, username: "guest" });
+            }
         });
     };
     return (

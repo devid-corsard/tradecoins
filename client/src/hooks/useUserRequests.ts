@@ -1,83 +1,57 @@
 import { Credentials } from "../types/Credentials";
+import { ServerMessage } from "../types/ServerMessage";
+import User from "../types/User";
 
 export default function useUserRequests() {
-    async function postLogout<TResponse>(): Promise<TResponse | undefined> {
-        try {
-            const response = await fetch("/api/user/logout", {
-                method: "post",
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return await response.json();
-        } catch (error) {
-            console.error("Fetch error:", error);
-        }
+    async function postLogout(): Promise<boolean | null> {
+        return fetch("/api/user/logout", {
+            method: "post",
+        })
+            .then((res) => res.ok)
+            .catch(() => null);
     }
 
-    async function getUserInfo<TResponse>(): Promise<TResponse | undefined> {
-        try {
-            const response = await fetch("/api/user/info", { method: "GET" });
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            const user = await response.json();
-            const currentUser = {
-                name: user.username,
-                id: user.user_id,
-            };
-            return currentUser as TResponse;
-        } catch (error) {
-            console.error("Fetch error:", error);
-        }
+    async function getUserInfo(): Promise<User | null> {
+        return fetch("/api/user/info", { method: "GET" })
+            .then((res) => res.json())
+            .then((user) => ({ name: user.username, id: user.user_id }) as User)
+            .catch(() => null);
     }
 
-    async function postRegister<TResponse>(
+    async function postRegister(
         credentials: Credentials
-    ): Promise<TResponse | undefined> {
-        try {
-            const data = new URLSearchParams();
-            data.append("username", credentials.username);
-            data.append("password", credentials.password);
-            const response = await fetch("/api/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type":
-                        "application/x-www-form-urlencoded;charset=UTF-8",
-                },
-                body: data,
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return await response.json();
-        } catch (error) {
-            console.error("Fetch error:", error);
-        }
+    ): Promise<ServerMessage | null> {
+        const data = new URLSearchParams();
+        data.append("username", credentials.username);
+        data.append("password", credentials.password);
+        return fetch("/api/register", {
+            method: "POST",
+            headers: {
+                "Content-Type":
+                    "application/x-www-form-urlencoded;charset=UTF-8",
+            },
+            body: data,
+        })
+            .then((res) => res.json())
+            .catch(() => null);
     }
 
-    async function postLogin<TResponse>(
+    async function postLogin(
         credentials: Credentials
-    ): Promise<TResponse | undefined> {
-        try {
-            const data = new URLSearchParams();
-            data.append("username", credentials.username);
-            data.append("password", credentials.password);
-            const response = await fetch("/api/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type":
-                        "application/x-www-form-urlencoded;charset=UTF-8",
-                },
-                body: data,
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return await response.json();
-        } catch (error) {
-            console.error("Fetch error:", error);
-        }
+    ): Promise<ServerMessage | null> {
+        const data = new URLSearchParams();
+        data.append("username", credentials.username);
+        data.append("password", credentials.password);
+        return fetch("/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type":
+                    "application/x-www-form-urlencoded;charset=UTF-8",
+            },
+            body: data,
+        })
+            .then((res) => res.json())
+            .catch(() => null);
     }
 
     return { getUserInfo, postLogin, postLogout, postRegister };
