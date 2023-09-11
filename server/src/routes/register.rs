@@ -7,29 +7,18 @@ use sqlx::{PgPool, Postgres, Transaction};
 
 use crate::{
     domain::{NewUser, Password, Username},
+    dto::{CredentialsForm, ServerMessage},
     session_state::TypedSession,
     telemetry::spawn_blocking_with_tracing,
     utils::error_chain_fmt,
 };
 
-#[derive(serde::Deserialize)]
-pub struct FormData {
-    username: String,
-    password: String,
-}
-
-#[derive(serde::Deserialize, serde::Serialize)]
-pub struct RegisterResponse {
-    pub success: bool,
-    pub messages: Vec<String>,
-}
-
-impl TryFrom<FormData> for NewUser {
+impl TryFrom<CredentialsForm> for NewUser {
     type Error = String;
 
-    fn try_from(form: FormData) -> Result<Self, Self::Error> {
+    fn try_from(form: CredentialsForm) -> Result<Self, Self::Error> {
         let username = Username::parse(form.username)?;
-        let password = Password::parse(form.password)?;
+        let password = Password::parse(form.password.expose_secret().to_owned())?;
         Ok(NewUser { username, password })
     }
 }
@@ -60,13 +49,13 @@ impl ResponseError for CreationError {
     fn error_response(&self) -> HttpResponse {
         match self {
             CreationError::ValidationError(e) => {
-                HttpResponse::build(self.status_code()).json(RegisterResponse {
+                HttpResponse::build(self.status_code()).json(ServerMessage {
                     success: false,
                     messages: Vec::from([e.to_owned()]),
                 })
             }
             CreationError::UnexpectedError(_) => {
-                HttpResponse::build(self.status_code()).json(RegisterResponse {
+                HttpResponse::build(self.status_code()).json(ServerMessage {
                     success: false,
                     messages: Vec::from(["Failed to handle request.".into()]),
                 })
@@ -83,7 +72,7 @@ impl ResponseError for CreationError {
     )
 )]
 pub async fn create_user(
-    form: web::Form<FormData>,
+    form: web::Form<CredentialsForm>,
     pool: web::Data<PgPool>,
     session: TypedSession,
 ) -> Result<HttpResponse, CreationError> {
@@ -103,7 +92,7 @@ pub async fn create_user(
         .context("Failed to start new user session")
         .is_err()
     {
-        return Ok(HttpResponse::Created().json(RegisterResponse {
+        return Ok(HttpResponse::Created().json(ServerMessage {
             success: true,
             messages: Vec::from([
                 "Registration successful.".into(),
@@ -111,7 +100,7 @@ pub async fn create_user(
             ]),
         }));
     };
-    Ok(HttpResponse::Created().json(RegisterResponse {
+    Ok(HttpResponse::Created().json(ServerMessage {
         success: true,
         messages: Vec::from(["Registration successful.".into()]),
     }))

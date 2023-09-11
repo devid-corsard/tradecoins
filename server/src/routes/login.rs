@@ -1,25 +1,13 @@
 use actix_web::{error::InternalError, web, HttpResponse};
 use reqwest::StatusCode;
-use secrecy::Secret;
 use sqlx::PgPool;
 
 use crate::{
     authentication::{validate_credentials, AuthError, Credentials},
+    dto::{CredentialsForm, ServerMessage},
     session_state::TypedSession,
     utils::error_chain_fmt,
 };
-
-#[derive(serde::Deserialize)]
-pub struct FormData {
-    username: String,
-    password: Secret<String>,
-}
-
-#[derive(serde::Deserialize, serde::Serialize)]
-pub struct LoginResponse {
-    pub success: bool,
-    pub messages: Vec<String>,
-}
 
 #[derive(thiserror::Error)]
 pub enum LoginError {
@@ -40,7 +28,7 @@ impl std::fmt::Debug for LoginError {
     fields(username=tracing::field::Empty, user_id=tracing::field::Empty)
     )]
 pub async fn login(
-    form: web::Form<FormData>,
+    form: web::Form<CredentialsForm>,
     pool: web::Data<PgPool>,
     session: TypedSession,
 ) -> Result<HttpResponse, InternalError<LoginError>> {
@@ -56,7 +44,7 @@ pub async fn login(
             session
                 .insert_user_id(user_id)
                 .map_err(|e| error_response(LoginError::UnexpectedError(e.into())))?;
-            Ok(HttpResponse::Ok().json(LoginResponse {
+            Ok(HttpResponse::Ok().json(ServerMessage {
                 success: true,
                 messages: Vec::from(["Login successful.".into()]),
             }))
@@ -83,7 +71,7 @@ fn error_response(e: LoginError) -> InternalError<LoginError> {
             StatusCode::INTERNAL_SERVER_ERROR
         }
     };
-    let response = HttpResponse::build(status).json(LoginResponse {
+    let response = HttpResponse::build(status).json(ServerMessage {
         success: false,
         messages: Vec::from([error_str]),
     });

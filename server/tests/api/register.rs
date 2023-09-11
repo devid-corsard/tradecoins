@@ -1,4 +1,4 @@
-use tradecoins::routes::RegisterResponse;
+use tradecoins::dto::ServerMessage;
 
 use crate::helpers::spawn_app;
 
@@ -13,7 +13,7 @@ async fn register_with_valid_data_returns_201_and_json_info() {
     });
     let response = app.post_register(&body).await;
     assert_eq!(201, response.status().as_u16());
-    let body = response.json::<RegisterResponse>().await.unwrap();
+    let body = response.json::<ServerMessage>().await.unwrap();
     assert_eq!(true, body.success);
     assert_eq!("Registration successful.", body.messages[0]);
 }
@@ -103,7 +103,7 @@ async fn register_with_incorrect_input_returns_400_and_json_info() {
             "Didn't send 400 when body is invalid becouse of {}",
             error
         );
-        let body = response.json::<RegisterResponse>().await.unwrap();
+        let body = response.json::<ServerMessage>().await.unwrap();
         assert_eq!(false, body.success);
         assert_eq!(error, body.messages[0]);
     }
@@ -122,7 +122,7 @@ async fn username_must_be_unique() {
     app.post_register(&body).await;
     let response = app.post_register(&body).await;
     assert_eq!(400, response.status().as_u16());
-    let body = response.json::<RegisterResponse>().await.unwrap();
+    let body = response.json::<ServerMessage>().await.unwrap();
     assert_eq!(false, body.success);
     assert_eq!("Username already in use", body.messages[0]);
 }
