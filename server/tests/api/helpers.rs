@@ -49,9 +49,9 @@ impl TestApp {
             .expect("Failed to execute a request")
     }
 
-    pub async fn get_user_data(&self) -> reqwest::Response {
+    pub async fn get_user_portfolio(&self) -> reqwest::Response {
         self.api_client
-            .get(&format!("{}/api/user/data", &self.address))
+            .get(&format!("{}/api/user/portfolio", &self.address))
             .send()
             .await
             .expect("Failed to execute a request")

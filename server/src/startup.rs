@@ -97,7 +97,7 @@ async fn run(
                             .wrap(from_fn(reject_anonymous_users))
                             //         .route("/password", web::post().to(change_password))
                             .route("/info", web::get().to(info))
-                            .route("/data", web::get().to(data))
+                            .route("/portfolio", web::get().to(data))
                             .route("/portfolioitem", web::post().to(portfolioitem))
                             .route("/logout", web::post().to(logout)),
                     ),
