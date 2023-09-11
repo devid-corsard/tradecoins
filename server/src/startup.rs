@@ -82,11 +82,10 @@ async fn run(
     let server = HttpServer::new(move || {
         App::new()
             .wrap(TracingLogger::default())
-            .wrap(
-                SessionMiddleware::builder(redis_store.clone(), secret_key.clone())
-                    .cookie_same_site(actix_web::cookie::SameSite::None)
-                    .build(),
-            )
+            .wrap(SessionMiddleware::new(
+                redis_store.clone(),
+                secret_key.clone(),
+            ))
             .route("/health_check", web::get().to(health_check))
             .service(
                 web::scope("/api")
