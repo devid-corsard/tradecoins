@@ -2,15 +2,12 @@ use actix_web::{web, HttpResponse};
 use anyhow::Context;
 use sqlx::{PgPool, Postgres, Transaction};
 
-use crate::{
-    authentication::UserId, dto::PortfolioItemCreated, session_state::TypedSession, utils::e500,
-};
+use crate::{authentication::UserId, dto::PortfolioItemCreated, utils::e500};
 
-#[tracing::instrument(name = "Create new portfolio item", skip(pool, session))]
+#[tracing::instrument(name = "Create new portfolio item", skip(pool))]
 pub async fn portfolioitem(
     pool: web::Data<PgPool>,
     user_id: web::ReqData<UserId>,
-    session: TypedSession,
 ) -> Result<HttpResponse, actix_web::Error> {
     let user_id = user_id.into_inner();
     let mut tx = pool.begin().await.map_err(e500)?;
@@ -22,7 +19,6 @@ pub async fn portfolioitem(
         .await
         .context("Transaction failed")
         .map_err(e500)?;
-    session.renew();
     Ok(HttpResponse::Created().json(res))
 }
 
