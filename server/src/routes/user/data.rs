@@ -7,9 +7,9 @@ use crate::{
     session_state::TypedSession,
 };
 
-#[tracing::instrument(name = "Getting user portfolio by id", skip(pool, session))]
+#[tracing::instrument(name = "Getting user portfolio by id", skip(_pool, session))]
 pub async fn data(
-    pool: web::Data<PgPool>,
+    _pool: web::Data<PgPool>,
     user_id: web::ReqData<UserId>,
     session: TypedSession,
 ) -> Result<HttpResponse, actix_web::Error> {

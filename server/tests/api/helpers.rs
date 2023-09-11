@@ -56,6 +56,14 @@ impl TestApp {
             .await
             .expect("Failed to execute a request")
     }
+
+    pub async fn post_new_portfolio_item(&self) -> reqwest::Response {
+        self.api_client
+            .post(&format!("{}/api/user/portfolioitem", &self.address))
+            .send()
+            .await
+            .expect("Failed to execute a request")
+    }
 }
 
 pub struct TestUser {

@@ -38,3 +38,9 @@ pub struct TradeItem {
     pub buy_price: String,
     pub sell_price: String,
 }
+
+#[derive(serde::Deserialize, serde::Serialize)]
+pub struct PortfolioItemCreated {
+    pub item_id: uuid::Uuid,
+    pub child_id: uuid::Uuid,
+}
