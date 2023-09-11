@@ -16,7 +16,7 @@ async fn after_login_has_an_access_to_user_info() {
 async fn after_login_has_an_access_to_portfolio() {
     let app = spawn_app().await;
     app.test_user.login(&app).await;
-    let response = app.post_user_data().await;
+    let response = app.get_user_data().await;
     let body = response.json::<Portfolio>().await.unwrap();
     assert_eq!("Ok".to_string(), body.info);
     // assert_eq!(, body.data);

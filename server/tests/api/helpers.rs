@@ -49,7 +49,7 @@ impl TestApp {
             .expect("Failed to execute a request")
     }
 
-    pub async fn post_user_data(&self) -> reqwest::Response {
+    pub async fn get_user_data(&self) -> reqwest::Response {
         self.api_client
             .get(&format!("{}/api/user/data", &self.address))
             .send()
