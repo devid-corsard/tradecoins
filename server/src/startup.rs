@@ -1,7 +1,7 @@
 use crate::{
     authentication::reject_anonymous_users,
     configuration::{DatabaseSettings, Settings},
-    routes::{create_user, health_check, info, login, logout},
+    routes::{create_user, data, health_check, info, login, logout},
 };
 use actix_files::Files;
 use actix_session::storage::RedisSessionStore;
@@ -97,6 +97,7 @@ async fn run(
                             .wrap(from_fn(reject_anonymous_users))
                             //         .route("/password", web::post().to(change_password))
                             .route("/info", web::get().to(info))
+                            .route("/data", web::get().to(data))
                             .route("/logout", web::post().to(logout)),
                     ),
             )

@@ -40,6 +40,22 @@ impl TestApp {
             .await
             .expect("Failed to execute a request")
     }
+
+    pub async fn post_user_info(&self) -> reqwest::Response {
+        self.api_client
+            .get(&format!("{}/api/user/info", &self.address))
+            .send()
+            .await
+            .expect("Failed to execute a request")
+    }
+
+    pub async fn post_user_data(&self) -> reqwest::Response {
+        self.api_client
+            .get(&format!("{}/api/user/data", &self.address))
+            .send()
+            .await
+            .expect("Failed to execute a request")
+    }
 }
 
 pub struct TestUser {
