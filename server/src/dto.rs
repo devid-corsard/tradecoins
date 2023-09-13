@@ -18,20 +18,20 @@ pub struct ServerMessage {
     pub messages: Vec<String>,
 }
 
-#[derive(serde::Deserialize, serde::Serialize)]
+#[derive(Debug, serde::Deserialize, serde::Serialize)]
 pub struct Portfolio {
     pub data: Vec<PortfolioItem>,
     pub info: String,
 }
 
-#[derive(serde::Deserialize, serde::Serialize)]
+#[derive(Debug, serde::Deserialize, serde::Serialize)]
 pub struct PortfolioItem {
     pub id: uuid::Uuid,
     pub name: String,
     pub data: Vec<TradeItem>,
 }
 
-#[derive(serde::Deserialize, serde::Serialize)]
+#[derive(Debug, serde::Deserialize, serde::Serialize)]
 pub struct TradeItem {
     pub id: uuid::Uuid,
     pub amount: String,
