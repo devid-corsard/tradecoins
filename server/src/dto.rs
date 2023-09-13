@@ -44,3 +44,8 @@ pub struct PortfolioItemCreated {
     pub parent_id: uuid::Uuid,
     pub child_id: uuid::Uuid,
 }
+
+#[derive(serde::Deserialize, serde::Serialize)]
+pub struct TradeItemCreated {
+    pub id: uuid::Uuid,
+}
