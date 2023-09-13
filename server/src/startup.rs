@@ -1,7 +1,10 @@
 use crate::{
     authentication::reject_anonymous_users,
     configuration::{DatabaseSettings, Settings},
-    routes::{create_user, data, health_check, info, login, logout, portfolioitem, tradeitem},
+    routes::{
+        create_user, delete_portfolioitem, delete_tradeitem, get_portfolio, health_check, info,
+        login, logout, new_portfolioitem, new_tradeitem,
+    },
 };
 use actix_files::Files;
 use actix_session::storage::RedisSessionStore;
@@ -96,9 +99,11 @@ async fn run(
                             .wrap(from_fn(reject_anonymous_users))
                             //         .route("/password", web::post().to(change_password))
                             .route("/info", web::get().to(info))
-                            .route("/portfolio", web::get().to(data))
-                            .route("/portfolioitem", web::post().to(portfolioitem))
-                            .route("/tradeitem", web::post().to(tradeitem))
+                            .route("/portfolio", web::get().to(get_portfolio))
+                            .route("/portfolioitem", web::post().to(new_portfolioitem))
+                            .route("/portfolioitem", web::delete().to(delete_portfolioitem))
+                            .route("/tradeitem", web::post().to(new_tradeitem))
+                            .route("/tradeitem", web::delete().to(delete_tradeitem))
                             .route("/logout", web::post().to(logout)),
                     ),
             )

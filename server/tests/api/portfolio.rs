@@ -40,3 +40,32 @@ async fn create_new_empty_trade_item_respond_with_201_and_id_and_stored_in_the_d
     assert_eq!(1, body.data.len());
     assert_eq!(2, body.data[0].data.len());
 }
+
+#[tokio::test]
+async fn delete_trade_item_returns_200_and_deleting_from_db() {
+    let app = spawn_app().await;
+    app.test_user.login(&app).await;
+    app.post_new_portfolio_item().await;
+    let response = app.get_user_portfolio().await;
+    let portfolio = response.json::<Portfolio>().await.unwrap();
+    let response = app.delete_trade_item(&portfolio.data[0].data[0].id).await;
+    assert_eq!(204, response.status().as_u16());
+    let response = app.get_user_portfolio().await;
+    let portfolio = response.json::<Portfolio>().await.unwrap();
+    assert_eq!(1, portfolio.data.len());
+    assert_eq!(0, portfolio.data[0].data.len());
+}
+
+#[tokio::test]
+async fn delete_portfolio_item_returns_200_and_deleting_from_db() {
+    let app = spawn_app().await;
+    app.test_user.login(&app).await;
+    app.post_new_portfolio_item().await;
+    let response = app.get_user_portfolio().await;
+    let portfolio = response.json::<Portfolio>().await.unwrap();
+    let response = app.delete_portfolio_item(&portfolio.data[0].id).await;
+    assert_eq!(204, response.status().as_u16());
+    let response = app.get_user_portfolio().await;
+    let portfolio = response.json::<Portfolio>().await.unwrap();
+    assert_eq!(0, portfolio.data.len());
+}

@@ -9,7 +9,7 @@ use crate::{
 };
 
 #[tracing::instrument(name = "Getting user portfolio by id", skip(pool))]
-pub async fn data(
+pub async fn get_portfolio(
     pool: web::Data<PgPool>,
     user_id: web::ReqData<UserId>,
 ) -> Result<HttpResponse, actix_web::Error> {
@@ -21,34 +21,57 @@ pub async fn data(
     Ok(HttpResponse::Ok().json(portfolio))
 }
 
+#[derive(Debug, sqlx::FromRow)]
+struct TradeItemsFromDb {
+    name: Option<String>,
+    pi_id: uuid::Uuid,
+    id: Option<uuid::Uuid>,
+    amount: Option<String>,
+    buy_price: Option<String>,
+    sell_price: Option<String>,
+}
+
 async fn get_user_portfolio(user_id: uuid::Uuid, pool: &PgPool) -> Result<Portfolio, sqlx::Error> {
-    let rows = sqlx::query!(
+    println!("we are trying to execute an query");
+    let rows = sqlx::query_as!(
+        TradeItemsFromDb,
         r#"
-        SELECT pi.name, pi.id pi_id, ti.id, ti.amount, ti.buy_price, ti.sell_price
+        SELECT pi.name, pi.id pi_id, ti.id as "id?", ti.amount, ti.buy_price, ti.sell_price
         FROM portfolio_item pi
-        JOIN trade_item ti ON pi.id = ti.portfolio_item_id
-        WHERE pi.user_id = $1 ORDER BY pi.id;
+        LEFT JOIN trade_item ti ON pi.id = ti.portfolio_item_id
+        WHERE pi.user_id = $1
+        ORDER BY pi.id;
         "#,
         user_id
     )
     .fetch_all(pool)
     .await?;
-    //    Record {
-    //     name: None,
-    //     pi_id: 19f10878-f4fa-4d7d-8181-8b64e619d25e,
-    //     id: e2164f4d-1781-4900-99b9-433d2f176d5b,
-    //     amount: None,
-    //     buy_price: None,
-    //     sell_price: None,
-    // }
+    Ok(adapter_db_to_dto(rows))
+}
+
+fn adapter_db_to_dto(rows: Vec<TradeItemsFromDb>) -> Portfolio {
     let mut portfolio_data: Vec<PortfolioItem> = Vec::with_capacity(15);
     let mut cur_pi: Option<&mut PortfolioItem> = None;
     for record in rows {
+        // check if record exists
+        // because it can be an empty portfolio item
+        // whithout trade items
+        if record.id.is_none() {
+            let new_portfolio_item = PortfolioItem {
+                id: record.pi_id,
+                name: record.name.unwrap_or("".into()),
+                data: Vec::with_capacity(15),
+            };
+            portfolio_data.push(new_portfolio_item);
+            cur_pi = Some(portfolio_data.last_mut().unwrap());
+            continue;
+        }
+        let trade_item_id = record.id.unwrap();
         let new_trade_item = TradeItem {
             amount: record.amount.unwrap_or("".into()),
             buy_price: record.buy_price.unwrap_or("".into()),
             sell_price: record.sell_price.unwrap_or("".into()),
-            id: record.id,
+            id: trade_item_id,
         };
         if cur_pi.is_none() {
             // first iteration
@@ -80,10 +103,8 @@ async fn get_user_portfolio(user_id: uuid::Uuid, pool: &PgPool) -> Result<Portfo
             cur_pi = Some(pi);
         }
     }
-    let portfolio = Portfolio {
+    Portfolio {
         info: "Ok".into(),
         data: portfolio_data,
-    };
-    dbg!(&portfolio);
-    Ok(portfolio)
+    }
 }

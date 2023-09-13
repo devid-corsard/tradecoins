@@ -74,6 +74,25 @@ impl TestApp {
             .await
             .expect("Failed to execute a request")
     }
+
+    pub async fn delete_trade_item(&self, id: &uuid::Uuid) -> reqwest::Response {
+        self.api_client
+            .delete(&format!("{}/api/user/tradeitem?id={}", &self.address, &id))
+            .send()
+            .await
+            .expect("Failed to execute a request")
+    }
+
+    pub async fn delete_portfolio_item(&self, id: &uuid::Uuid) -> reqwest::Response {
+        self.api_client
+            .delete(&format!(
+                "{}/api/user/portfolioitem?id={}",
+                &self.address, &id
+            ))
+            .send()
+            .await
+            .expect("Failed to execute a request")
+    }
 }
 
 pub struct TestUser {

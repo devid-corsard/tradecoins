@@ -10,7 +10,7 @@ pub struct Params {
 }
 
 #[tracing::instrument(name = "Create new trade item", skip(pool))]
-pub async fn tradeitem(
+pub async fn new_tradeitem(
     pool: web::Data<PgPool>,
     q_params: web::Query<Params>,
 ) -> Result<HttpResponse, actix_web::Error> {

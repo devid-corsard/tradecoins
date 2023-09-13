@@ -5,7 +5,7 @@ use sqlx::{PgPool, Postgres, Transaction};
 use crate::{authentication::UserId, dto::PortfolioItemCreated, utils::e500};
 
 #[tracing::instrument(name = "Create new portfolio item", skip(pool))]
-pub async fn portfolioitem(
+pub async fn new_portfolioitem(
     pool: web::Data<PgPool>,
     user_id: web::ReqData<UserId>,
 ) -> Result<HttpResponse, actix_web::Error> {
