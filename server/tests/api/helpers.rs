@@ -93,6 +93,21 @@ impl TestApp {
             .await
             .expect("Failed to execute a request")
     }
+
+    pub async fn edit_portfolio_item(
+        &self,
+        id: &uuid::Uuid,
+        new_name: &String,
+    ) -> reqwest::Response {
+        self.api_client
+            .patch(&format!(
+                "{}/api/user/portfolioitem?id={}&name={}",
+                &self.address, &id, &new_name
+            ))
+            .send()
+            .await
+            .expect("Failed to execute a request")
+    }
 }
 
 pub struct TestUser {

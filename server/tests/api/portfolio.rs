@@ -69,3 +69,27 @@ async fn delete_portfolio_item_returns_200_and_deleting_from_db() {
     let portfolio = response.json::<Portfolio>().await.unwrap();
     assert_eq!(0, portfolio.data.len());
 }
+
+#[tokio::test]
+async fn edit_portfolio_item_names_works() {
+    let app = spawn_app().await;
+    app.test_user.login(&app).await;
+    app.post_new_portfolio_item().await;
+    app.post_new_portfolio_item().await;
+    let response = app.get_user_portfolio().await;
+    let portfolio = response.json::<Portfolio>().await.unwrap();
+    let new_name = uuid::Uuid::new_v4().to_string();
+    let new_name_2 = uuid::Uuid::new_v4().to_string();
+    let response = app
+        .edit_portfolio_item(&portfolio.data[0].id, &new_name)
+        .await;
+    assert_eq!(204, response.status().as_u16());
+    let response = app
+        .edit_portfolio_item(&portfolio.data[1].id, &new_name_2)
+        .await;
+    assert_eq!(204, response.status().as_u16());
+    let response = app.get_user_portfolio().await;
+    let portfolio = response.json::<Portfolio>().await.unwrap();
+    assert_eq!(new_name, portfolio.data[0].name);
+    assert_eq!(new_name_2, portfolio.data[1].name);
+}
