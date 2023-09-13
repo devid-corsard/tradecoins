@@ -108,6 +108,23 @@ impl TestApp {
             .await
             .expect("Failed to execute a request")
     }
+
+    pub async fn edit_trade_item(
+        &self,
+        id: &uuid::Uuid,
+        amount: &str,
+        buy_price: &str,
+        sell_price: &str,
+    ) -> reqwest::Response {
+        self.api_client
+            .patch(&format!(
+                "{}/api/user/tradeitem?id={}&amount={}&buy_price={}&sell_price={}",
+                &self.address, &id, &amount, &buy_price, &sell_price
+            ))
+            .send()
+            .await
+            .expect("Failed to execute a request")
+    }
 }
 
 pub struct TestUser {

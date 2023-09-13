@@ -2,8 +2,8 @@ use crate::{
     authentication::reject_anonymous_users,
     configuration::{DatabaseSettings, Settings},
     routes::{
-        create_user, delete_portfolioitem, delete_tradeitem, edit_portfolioitem, get_portfolio,
-        health_check, info, login, logout, new_portfolioitem, new_tradeitem,
+        create_user, delete_portfolioitem, delete_tradeitem, edit_portfolioitem, edit_tradeitem,
+        get_portfolio, health_check, info, login, logout, new_portfolioitem, new_tradeitem,
     },
 };
 use actix_files::Files;
@@ -105,6 +105,7 @@ async fn run(
                             .route("/portfolioitem", web::patch().to(edit_portfolioitem))
                             .route("/tradeitem", web::post().to(new_tradeitem))
                             .route("/tradeitem", web::delete().to(delete_tradeitem))
+                            .route("/tradeitem", web::patch().to(edit_tradeitem))
                             .route("/logout", web::post().to(logout)),
                     ),
             )
