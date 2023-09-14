@@ -1,9 +1,9 @@
 import { useContext, useState } from "react";
 import AccountForm from "../components/AccountForm";
 import { AuthContext } from "../context/AuthContext";
-import { Credentials } from "../types/Credentials";
 import useUserRequests from "../hooks/useUserRequests";
 import { useNavigate } from "react-router-dom";
+import { Credentials } from "../dto/Credentials";
 
 const Login = () => {
     const { setAuth } = useContext(AuthContext);

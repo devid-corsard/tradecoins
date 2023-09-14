@@ -1,6 +1,11 @@
-import { Credentials } from "../types/Credentials";
-import { ServerMessage } from "../types/ServerMessage";
-import User from "../types/User";
+import { UUID } from "crypto";
+import { Credentials } from "../dto/Credentials";
+import { ServerMessage } from "../dto/ServerMessage";
+
+type User = {
+    name: string;
+    id: UUID;
+};
 
 export default function useUserRequests() {
     async function postLogout(): Promise<boolean | null> {

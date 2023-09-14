@@ -1,5 +1,4 @@
-import { TradeItemDto, TradeItemInputNames } from "../dto/TradeItemDto";
-import { mockPortfolio } from "../mockData";
+import { TradeItemType, TradeItemInputNames } from "../domain/TradeItemType";
 import {
     AddNewPortfolioItemAction,
     AddNewTradeAction,
@@ -8,31 +7,45 @@ import {
     DeleteTradeAction,
     GetPortfolioAction,
     PortfolioActionsEnum,
+    SetPortfolioAction,
     UpdateNameAction,
     UpdateTradeInput,
 } from "./PortfolioActions";
-import PortfolioItemType from "../types/PortfolioItemType";
+import PortfolioType, { PortfolioItemType } from "../domain/PortfolioType";
 import { INITIAL_PORTFOLIO } from "./PortfolioContext";
+import usePortfolioRequests from "../hooks/usePortfolioRequests";
 
-type Portfolio = PortfolioItemType[];
-
-const portfolioReducerHandler = {
+const portfolioReducersMap = {
     [PortfolioActionsEnum.getPortfolio]: (
-        _state: Portfolio,
+        _state: PortfolioType,
         _action: GetPortfolioAction
-    ): Portfolio => {
-        return INITIAL_PORTFOLIO;
+    ): PortfolioType => {
+        const { getPortfolio } = usePortfolioRequests();
+        let new_portfolio: PortfolioType = INITIAL_PORTFOLIO;
+        const hz = async () => {
+            const portfolio = await getPortfolio();
+            if (portfolio) new_portfolio = portfolio;
+        };
+        hz();
+        return new_portfolio;
+    },
+
+    [PortfolioActionsEnum.setPortfolio]: (
+        _state: PortfolioType,
+        action: SetPortfolioAction
+    ): PortfolioType => {
+        return action.payload.value;
     },
 
     [PortfolioActionsEnum.copyTrade]: (
-        state: Portfolio,
+        state: PortfolioType,
         action: CopyTradeAction
-    ): Portfolio => {
+    ): PortfolioType => {
         state.forEach((portfolioItem: PortfolioItemType) => {
-            portfolioItem.data.forEach((tradeItem: TradeItemDto) => {
+            portfolioItem.data.forEach((tradeItem: TradeItemType) => {
                 if (tradeItem.id === action.payload.id) {
                     portfolioItem.data.push(
-                        new TradeItemDto(
+                        new TradeItemType(
                             crypto.randomUUID(),
                             tradeItem[TradeItemInputNames.Amount],
                             tradeItem[TradeItemInputNames.BuyPrice],
@@ -46,9 +59,9 @@ const portfolioReducerHandler = {
     },
 
     [PortfolioActionsEnum.updateName]: (
-        state: Portfolio,
+        state: PortfolioType,
         action: UpdateNameAction
-    ): Portfolio => {
+    ): PortfolioType => {
         state.forEach((pi: PortfolioItemType) => {
             if (pi.id === action.payload.id) {
                 pi.name = action.payload.value;
@@ -58,21 +71,21 @@ const portfolioReducerHandler = {
     },
 
     [PortfolioActionsEnum.addNewTrade]: (
-        state: Portfolio,
+        state: PortfolioType,
         action: AddNewTradeAction
-    ): Portfolio => {
+    ): PortfolioType => {
         const portfolioItem = state.find((pi) => pi.id === action.payload.id);
         if (!portfolioItem) return state;
 
-        const newTI: TradeItemDto = new TradeItemDto(crypto.randomUUID());
+        const newTI: TradeItemType = new TradeItemType(crypto.randomUUID());
         (portfolioItem as PortfolioItemType).data.push(newTI);
         return [...state];
     },
 
     [PortfolioActionsEnum.deleteTrade]: (
-        state: Portfolio,
+        state: PortfolioType,
         action: DeleteTradeAction
-    ): Portfolio => {
+    ): PortfolioType => {
         let itemIdxToDelete = -1;
         const portfolioItemToDeleteFrom = state.find((pi) => {
             itemIdxToDelete = pi.data.findIndex(
@@ -90,13 +103,14 @@ const portfolioReducerHandler = {
     },
 
     [PortfolioActionsEnum.updateTradeInput]: (
-        state: Portfolio,
+        state: PortfolioType,
         action: UpdateTradeInput
-    ): Portfolio => {
+    ): PortfolioType => {
+        const { id, valueName, value } = action.payload;
         const done = state.some((pi) => {
             return pi.data.some((ti) => {
-                if (ti.id === action.payload.id) {
-                    ti[action.payload.propName] = action.payload.value;
+                if (ti.id === id) {
+                    ti.update(valueName, value);
                     return true;
                 }
                 return false;
@@ -107,23 +121,22 @@ const portfolioReducerHandler = {
     },
 
     [PortfolioActionsEnum.addNewPortfolioItem]: (
-        state: Portfolio,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        _action: AddNewPortfolioItemAction
-    ): Portfolio => {
+        state: PortfolioType,
+        action: AddNewPortfolioItemAction
+    ): PortfolioType => {
         const newPortfolioItem: PortfolioItemType = {
             name: "",
-            id: crypto.randomUUID(),
-            data: [new TradeItemDto(crypto.randomUUID())],
+            id: action.payload.parent_id,
+            data: [new TradeItemType(action.payload.child_id)],
         };
         state.push(newPortfolioItem);
         return [...state];
     },
 
     [PortfolioActionsEnum.deletePortfolioItem]: (
-        state: Portfolio,
+        state: PortfolioType,
         action: DeletePortfolioItemAction
-    ): Portfolio => {
+    ): PortfolioType => {
         const delItemIdx = state.findIndex((pi) => pi.id === action.payload.id);
         if (delItemIdx !== -1) {
             state.splice(delItemIdx, 1);
@@ -132,4 +145,4 @@ const portfolioReducerHandler = {
         return state;
     },
 };
-export default portfolioReducerHandler;
+export default portfolioReducersMap;

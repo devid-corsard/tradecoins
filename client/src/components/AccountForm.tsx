@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Credentials } from "../types/Credentials";
+import { Credentials } from "../dto/Credentials";
 
 type FormProps = {
     onSubmit: (data: Credentials) => void;
