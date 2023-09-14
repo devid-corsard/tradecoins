@@ -112,14 +112,13 @@ impl TestApp {
     pub async fn edit_trade_item(
         &self,
         id: &uuid::Uuid,
-        amount: &str,
-        buy_price: &str,
-        sell_price: &str,
+        name: &str,
+        value: &str,
     ) -> reqwest::Response {
         self.api_client
             .patch(&format!(
-                "{}/api/user/tradeitem?id={}&amount={}&buy_price={}&sell_price={}",
-                &self.address, &id, &amount, &buy_price, &sell_price
+                "{}/api/user/tradeitem?id={}&name={}&value={}",
+                &self.address, &id, &name, &value
             ))
             .send()
             .await

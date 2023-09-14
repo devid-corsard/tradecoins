@@ -1,4 +1,7 @@
-use tradecoins::dto::{Portfolio, PortfolioItemCreated, TradeItemCreated};
+use tradecoins::{
+    dto::{Portfolio, PortfolioItemCreated, TradeItemCreated},
+    routes::InputFields,
+};
 
 use crate::helpers::spawn_app;
 
@@ -102,36 +105,34 @@ async fn edit_trade_item_values_works() {
     app.post_new_portfolio_item().await;
     let response = app.get_user_portfolio().await;
     let portfolio = response.json::<Portfolio>().await.unwrap();
-    let new_values = ["20", "5.8", "7.5", "0.007", "25654", ""];
+    let new_values = ["0.0001", "11.5567", "9999"];
     let response = app
         .edit_trade_item(
             &portfolio.data[0].data[0].id,
-            &new_values[0],
-            &new_values[1],
-            &new_values[2],
+            InputFields::Amount.to_string().as_str(),
+            new_values[0],
         )
         .await;
     assert_eq!(204, response.status().as_u16());
     let response = app
         .edit_trade_item(
             &portfolio.data[1].data[0].id,
-            &new_values[3],
-            &new_values[4],
-            &new_values[5],
+            InputFields::BuyPrice.to_string().as_str(),
+            new_values[1],
         )
         .await;
     assert_eq!(204, response.status().as_u16());
+    // try to edit same value with random value name
+    let response = app
+        .edit_trade_item(
+            &portfolio.data[1].data[0].id,
+            uuid::Uuid::new_v4().to_string().as_str(),
+            new_values[2],
+        )
+        .await;
+    assert_eq!(400, response.status().as_u16());
     let response = app.get_user_portfolio().await;
     let portfolio = response.json::<Portfolio>().await.unwrap();
-    assert_eq!(
-        new_values,
-        [
-            portfolio.data[0].data[0].amount.as_str(),
-            portfolio.data[0].data[0].buy_price.as_str(),
-            portfolio.data[0].data[0].sell_price.as_str(),
-            portfolio.data[1].data[0].amount.as_str(),
-            portfolio.data[1].data[0].buy_price.as_str(),
-            portfolio.data[1].data[0].sell_price.as_str(),
-        ]
-    );
+    assert_eq!(new_values[0], portfolio.data[0].data[0].amount);
+    assert_eq!(new_values[1], portfolio.data[1].data[0].buy_price);
 }

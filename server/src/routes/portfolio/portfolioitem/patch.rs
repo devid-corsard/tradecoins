@@ -2,7 +2,7 @@ use actix_web::{web, HttpResponse};
 use anyhow::Context;
 use sqlx::PgPool;
 
-use crate::utils::e500;
+use crate::utils::{e400, e500};
 
 #[derive(serde::Deserialize, Debug)]
 pub struct Params {
@@ -24,7 +24,8 @@ pub async fn edit_portfolioitem(
         ))
         .map_err(e500)?;
     if rows_affected == 0 {
-        return Ok(HttpResponse::BadRequest().finish());
+        // return Ok(HttpResponse::BadRequest().finish());
+        return Err(e400("No changes"));
     }
     Ok(HttpResponse::NoContent().finish())
 }
