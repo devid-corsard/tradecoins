@@ -10,7 +10,7 @@ pub struct Params {
     pub name: String,
 }
 
-#[tracing::instrument(name = "Deleting portfolio item", skip(pool))]
+#[tracing::instrument(name = "Edit name of portfolio item", skip(pool))]
 pub async fn edit_portfolioitem(
     pool: web::Data<PgPool>,
     q_params: web::Query<Params>,
@@ -19,7 +19,7 @@ pub async fn edit_portfolioitem(
     edit_portfolio_item(q_params.id, q_params.name, &pool)
         .await
         .context(format!(
-            "Failed to delete portfolio item - id:{}",
+            "Failed to change name of portfolio item - id:{}",
             q_params.id
         ))
         .map_err(e500)?;
@@ -27,7 +27,7 @@ pub async fn edit_portfolioitem(
 }
 
 #[tracing::instrument(
-    name = "Deleting trade item from db", 
+    name = "Saving new name of portfolio item to db", 
     skip_all,
     fields(id=tracing::field::Empty)
 )]

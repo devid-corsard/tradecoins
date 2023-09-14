@@ -26,7 +26,7 @@ pub async fn edit_tradeitem(
 }
 
 #[tracing::instrument(
-    name = "Editing trade item in db", 
+    name = "Saving trade item new values in db", 
     skip_all,
     fields(id=tracing::field::Empty)
 )]
