@@ -16,13 +16,16 @@ pub async fn edit_portfolioitem(
     q_params: web::Query<Params>,
 ) -> Result<HttpResponse, actix_web::Error> {
     let q_params = q_params.into_inner();
-    edit_portfolio_item(q_params.id, q_params.name, &pool)
+    let rows_affected = edit_portfolio_item(q_params.id, q_params.name, &pool)
         .await
         .context(format!(
             "Failed to change name of portfolio item - id:{}",
             q_params.id
         ))
         .map_err(e500)?;
+    if rows_affected == 0 {
+        return Ok(HttpResponse::BadRequest().finish());
+    }
     Ok(HttpResponse::NoContent().finish())
 }
 
@@ -35,14 +38,14 @@ async fn edit_portfolio_item(
     id: uuid::Uuid,
     new_name: String,
     pool: &PgPool,
-) -> Result<(), sqlx::Error> {
+) -> Result<u64, sqlx::Error> {
     tracing::Span::current().record("id", &tracing::field::display(&id));
-    sqlx::query!(
+    let res = sqlx::query!(
         "UPDATE portfolio_item SET name = $1 WHERE id = $2;",
         &new_name,
         &id
     )
     .execute(pool)
     .await?;
-    Ok(())
+    Ok(res.rows_affected())
 }

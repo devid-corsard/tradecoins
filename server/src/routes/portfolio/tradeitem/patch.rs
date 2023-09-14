@@ -18,10 +18,13 @@ pub async fn edit_tradeitem(
     q_params: web::Query<Params>,
 ) -> Result<HttpResponse, actix_web::Error> {
     let q_params = q_params.into_inner();
-    edit_trade_item(&q_params, &pool)
+    let rows_affected = edit_trade_item(&q_params, &pool)
         .await
         .context(format!("Failed to edit trade item - id:{}", q_params.id))
         .map_err(e500)?;
+    if rows_affected == 0 {
+        return Ok(HttpResponse::BadRequest().finish());
+    }
     Ok(HttpResponse::NoContent().finish())
 }
 
@@ -30,9 +33,9 @@ pub async fn edit_tradeitem(
     skip_all,
     fields(id=tracing::field::Empty)
 )]
-async fn edit_trade_item(item: &Params, pool: &PgPool) -> Result<(), sqlx::Error> {
+async fn edit_trade_item(item: &Params, pool: &PgPool) -> Result<u64, sqlx::Error> {
     tracing::Span::current().record("id", &tracing::field::display(&item.id));
-    sqlx::query!(
+    let res = sqlx::query!(
         "UPDATE trade_item SET amount=$1, buy_price=$2, sell_price=$3 WHERE id = $4;",
         &item.amount,
         &item.buy_price,
@@ -41,5 +44,5 @@ async fn edit_trade_item(item: &Params, pool: &PgPool) -> Result<(), sqlx::Error
     )
     .execute(pool)
     .await?;
-    Ok(())
+    Ok(res.rows_affected())
 }
