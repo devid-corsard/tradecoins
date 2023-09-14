@@ -17,13 +17,13 @@ pub async fn new_tradeitem(
     let q_params = q_params.into_inner();
     let res = insert_new_trade_item(q_params.id, &pool)
         .await
-        .context("Failed to insert new pf item to db")
+        .context("Failed to insert new trade item to db")
         .map_err(e500)?;
     Ok(HttpResponse::Created().json(res))
 }
 
 #[tracing::instrument(
-    name = "Insert new portfolio item to db", 
+    name = "Insert new trade item to db",
     skip_all,
     fields(parent_id=tracing::field::Empty, child_id=tracing::field::Empty)
 )]
