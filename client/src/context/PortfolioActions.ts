@@ -4,7 +4,6 @@ import { TradeItemInputNames } from "../domain/TradeItemType";
 import { PortfolioItemCreated } from "../dto/PortfolioDto";
 
 export const enum PortfolioActionsEnum {
-    getPortfolio = "GET_PORTFOLIO",
     setPortfolio = "SET_PORTFOLIO",
     updateName = "UPDATE_NAME",
     updateTradeInput = "UPDATE_TRADE_INPUT",
@@ -15,9 +14,6 @@ export const enum PortfolioActionsEnum {
     deletePortfolioItem = "DELETE_PITEM",
 }
 
-export type GetPortfolioAction = {
-    type: PortfolioActionsEnum.getPortfolio;
-};
 export type SetPortfolioAction = {
     type: PortfolioActionsEnum.setPortfolio;
     payload: { value: PortfilioType };
@@ -52,7 +48,6 @@ export type DeletePortfolioItemAction = {
 };
 
 export type PortfolioActionTypesUnion =
-    | GetPortfolioAction
     | SetPortfolioAction
     | UpdateNameAction
     | UpdateTradeInput
@@ -61,14 +56,3 @@ export type PortfolioActionTypesUnion =
     | DeleteTradeAction
     | AddNewPortfolioItemAction
     | DeletePortfolioItemAction;
-
-export const enum PortfolioActionTypesEnum {
-    GetPortfolioAction,
-    UpdateNameAction,
-    UpdateTradeInput,
-    AddNewTradeAction,
-    CopyTradeAction,
-    DeleteTradeAction,
-    AddNewPortfolioItemAction,
-    DeletePortfolioItemAction,
-}
