@@ -136,3 +136,39 @@ async fn edit_trade_item_values_works() {
     assert_eq!(new_values[0], portfolio.data[0].data[0].amount);
     assert_eq!(new_values[1], portfolio.data[1].data[0].buy_price);
 }
+
+#[tokio::test]
+async fn copy_trade_item_returns_201_and_new_item_id_and_stored_to_db() {
+    let app = spawn_app().await;
+    app.test_user.login(&app).await;
+    let response = app.post_new_portfolio_item().await;
+    let new_items = response.json::<PortfolioItemCreated>().await.unwrap();
+    let new_values = ["0.0001", "11.5567"];
+    app.edit_trade_item(
+        &new_items.child_id,
+        InputFields::Amount.to_string().as_str(),
+        new_values[0],
+    )
+    .await;
+    app.edit_trade_item(
+        &new_items.child_id,
+        InputFields::BuyPrice.to_string().as_str(),
+        new_values[1],
+    )
+    .await;
+    let response = app.post_copy_trade_item(&new_items.child_id).await;
+    assert_eq!(201, response.status().as_u16());
+    let response = app.get_user_portfolio().await;
+    let portfolio = response.json::<Portfolio>().await.unwrap();
+    assert_eq!(2, portfolio.data[0].data.len());
+    assert_eq!(
+        portfolio.data[0].data[0].amount,
+        portfolio.data[0].data[1].amount
+    );
+    assert_eq!(
+        portfolio.data[0].data[0].buy_price,
+        portfolio.data[0].data[1].buy_price
+    );
+    assert_eq!(new_values[0], portfolio.data[0].data[1].amount);
+    assert_eq!(new_values[1], portfolio.data[0].data[1].buy_price);
+}

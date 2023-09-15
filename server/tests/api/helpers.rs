@@ -69,7 +69,21 @@ impl TestApp {
 
     pub async fn post_new_trade_item(&self, id: &uuid::Uuid) -> reqwest::Response {
         self.api_client
-            .post(&format!("{}/api/user/tradeitem?id={}", &self.address, &id))
+            .post(&format!(
+                "{}/api/user/tradeitem?action=New&parent_id={}",
+                &self.address, &id
+            ))
+            .send()
+            .await
+            .expect("Failed to execute a request")
+    }
+
+    pub async fn post_copy_trade_item(&self, id: &uuid::Uuid) -> reqwest::Response {
+        self.api_client
+            .post(&format!(
+                "{}/api/user/tradeitem?action=Copy&id={}",
+                &self.address, &id
+            ))
             .send()
             .await
             .expect("Failed to execute a request")
