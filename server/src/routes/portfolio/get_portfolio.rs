@@ -36,7 +36,6 @@ async fn get_user_portfolio(
     user_id: uuid::Uuid,
     pool: &PgPool,
 ) -> Result<Vec<TradeItemFromDb>, sqlx::Error> {
-    println!("we are trying to execute an query");
     let rows = sqlx::query_as!(
         TradeItemFromDb,
         r#"

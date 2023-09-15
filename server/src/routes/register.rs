@@ -1,8 +1,8 @@
+use crate::authentication::compute_password_hash;
 use actix_web::{web, HttpResponse, ResponseError};
 use anyhow::Context;
-use argon2::{password_hash::SaltString, Algorithm, Argon2, Params, PasswordHasher, Version};
 use reqwest::StatusCode;
-use secrecy::{ExposeSecret, Secret};
+use secrecy::ExposeSecret;
 use sqlx::{PgPool, Postgres, Transaction};
 
 use crate::{
@@ -154,16 +154,4 @@ async fn insert_user(
     .await
     .context("Failed to store new user into database.")?;
     Ok(user_id)
-}
-
-fn compute_password_hash(password: &Secret<String>) -> Result<Secret<String>, anyhow::Error> {
-    let salt = SaltString::generate(&mut rand::thread_rng());
-    let password_hash = Argon2::new(
-        Algorithm::Argon2id,
-        Version::V0x13,
-        Params::new(15000, 2, 1, None).unwrap(),
-    )
-    .hash_password(password.expose_secret().as_bytes(), &salt)?
-    .to_string();
-    Ok(Secret::new(password_hash))
 }
