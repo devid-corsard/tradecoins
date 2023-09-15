@@ -1,7 +1,10 @@
 use crate::{
     authentication::reject_anonymous_users,
     configuration::{DatabaseSettings, Settings},
-    routes::{create_user, health_check, info, login, logout},
+    routes::{
+        create_user, delete_portfolioitem, delete_tradeitem, edit_portfolioitem, edit_tradeitem,
+        get_portfolio, health_check, info, login, logout, new_portfolioitem, new_tradeitem,
+    },
 };
 use actix_files::Files;
 use actix_session::storage::RedisSessionStore;
@@ -82,11 +85,10 @@ async fn run(
     let server = HttpServer::new(move || {
         App::new()
             .wrap(TracingLogger::default())
-            .wrap(
-                SessionMiddleware::builder(redis_store.clone(), secret_key.clone())
-                    .cookie_same_site(actix_web::cookie::SameSite::None)
-                    .build(),
-            )
+            .wrap(SessionMiddleware::new(
+                redis_store.clone(),
+                secret_key.clone(),
+            ))
             .route("/health_check", web::get().to(health_check))
             .service(
                 web::scope("/api")
@@ -97,6 +99,13 @@ async fn run(
                             .wrap(from_fn(reject_anonymous_users))
                             //         .route("/password", web::post().to(change_password))
                             .route("/info", web::get().to(info))
+                            .route("/portfolio", web::get().to(get_portfolio))
+                            .route("/portfolioitem", web::post().to(new_portfolioitem))
+                            .route("/portfolioitem", web::delete().to(delete_portfolioitem))
+                            .route("/portfolioitem", web::patch().to(edit_portfolioitem))
+                            .route("/tradeitem", web::post().to(new_tradeitem))
+                            .route("/tradeitem", web::delete().to(delete_tradeitem))
+                            .route("/tradeitem", web::patch().to(edit_tradeitem))
                             .route("/logout", web::post().to(logout)),
                     ),
             )

@@ -1,41 +1,55 @@
-import { Dispatch, ReactNode, createContext, useReducer } from "react";
-import PortfolioItemType from "../types/PortfolioItemType";
+import {
+    Dispatch,
+    ReactNode,
+    createContext,
+    useReducer,
+    useState,
+} from "react";
 import { PortfolioActionTypesUnion } from "./PortfolioActions";
-import portfolioReducerHandler from "./portfolioReducer";
+import PortfolioType from "../domain/PortfolioType";
+import portfolioReducersMap from "./portfolioReducersMap";
 
 export type PortfolioContextType = {
-  portfolio: PortfolioItemType[];
-  dispatch: Dispatch<PortfolioActionTypesUnion>;
+    portfolio: PortfolioType;
+    n_portfolio: PortfolioType;
+    setPortfolio: Dispatch<React.SetStateAction<PortfolioType>>;
+    dispatch: Dispatch<PortfolioActionTypesUnion>;
 };
 
-export const INITIAL_PORTFOLIO: PortfolioItemType[] = [];
+export const INITIAL_PORTFOLIO: PortfolioType = [];
 
 export const PortfolioContext = createContext<PortfolioContextType>({
-  portfolio: INITIAL_PORTFOLIO,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  dispatch: () => {},
+    portfolio: INITIAL_PORTFOLIO,
+    n_portfolio: INITIAL_PORTFOLIO,
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    dispatch: () => {},
+    setPortfolio: () => {},
 });
 
 type Props = { children: ReactNode };
 
-export const PortfolioContextProvider = ({ children }: Props) => {
-  const portfolioReducer = (
-    state: PortfolioItemType[],
+const portfolioReducer = (
+    state: PortfolioType,
     action: PortfolioActionTypesUnion
-  ): PortfolioItemType[] => {
+): PortfolioType => {
+    return (portfolioReducersMap[action.type] as typeof portfolioReducer)(
+        state,
+        action
+    );
+};
+
+export const PortfolioContextProvider = ({ children }: Props) => {
+    const [portfolio, dispatch] = useReducer(
+        portfolioReducer,
+        INITIAL_PORTFOLIO
+    );
+    const [n_portfolio, setPortfolio] = useState(INITIAL_PORTFOLIO);
+
     return (
-      portfolioReducerHandler[action.type] as (
-        state: PortfolioItemType[],
-        action: PortfolioActionTypesUnion
-      ) => PortfolioItemType[]
-    )(state, action);
-  };
-
-  const [portfolio, dispatch] = useReducer(portfolioReducer, INITIAL_PORTFOLIO);
-
-  return (
-    <PortfolioContext.Provider value={{ portfolio, dispatch }}>
-      {children}
-    </PortfolioContext.Provider>
-  );
+        <PortfolioContext.Provider
+            value={{ portfolio, dispatch, n_portfolio, setPortfolio }}
+        >
+            {children}
+        </PortfolioContext.Provider>
+    );
 };

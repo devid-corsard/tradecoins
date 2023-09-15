@@ -1,0 +1,2 @@
+ALTER TABLE trade_item
+DROP constraint trade_item_portfolio_item_id_fkey;

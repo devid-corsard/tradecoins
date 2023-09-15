@@ -1,8 +1,10 @@
 use argon2::{password_hash::SaltString, Algorithm, Argon2, Params, PasswordHasher, Version};
+use once_cell::sync::Lazy;
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use tradecoins::{
     configuration::{get_configuration, DatabaseSettings},
     startup::{get_connection_pool, Application},
+    telemetry::{get_subscriber, init_subscriber},
 };
 use uuid::Uuid;
 
@@ -36,6 +38,88 @@ impl TestApp {
             .post(&format!("{}/api/login", &self.address))
             .header("Content-type", "application/x-www-form-urlencoded")
             .form(body)
+            .send()
+            .await
+            .expect("Failed to execute a request")
+    }
+
+    pub async fn get_user_info(&self) -> reqwest::Response {
+        self.api_client
+            .get(&format!("{}/api/user/info", &self.address))
+            .send()
+            .await
+            .expect("Failed to execute a request")
+    }
+
+    pub async fn get_user_portfolio(&self) -> reqwest::Response {
+        self.api_client
+            .get(&format!("{}/api/user/portfolio", &self.address))
+            .send()
+            .await
+            .expect("Failed to execute a request")
+    }
+
+    pub async fn post_new_portfolio_item(&self) -> reqwest::Response {
+        self.api_client
+            .post(&format!("{}/api/user/portfolioitem", &self.address))
+            .send()
+            .await
+            .expect("Failed to execute a request")
+    }
+
+    pub async fn post_new_trade_item(&self, id: &uuid::Uuid) -> reqwest::Response {
+        self.api_client
+            .post(&format!("{}/api/user/tradeitem?id={}", &self.address, &id))
+            .send()
+            .await
+            .expect("Failed to execute a request")
+    }
+
+    pub async fn delete_trade_item(&self, id: &uuid::Uuid) -> reqwest::Response {
+        self.api_client
+            .delete(&format!("{}/api/user/tradeitem?id={}", &self.address, &id))
+            .send()
+            .await
+            .expect("Failed to execute a request")
+    }
+
+    pub async fn delete_portfolio_item(&self, id: &uuid::Uuid) -> reqwest::Response {
+        self.api_client
+            .delete(&format!(
+                "{}/api/user/portfolioitem?id={}",
+                &self.address, &id
+            ))
+            .send()
+            .await
+            .expect("Failed to execute a request")
+    }
+
+    pub async fn edit_portfolio_item(
+        &self,
+        id: &uuid::Uuid,
+        new_name: &String,
+    ) -> reqwest::Response {
+        self.api_client
+            .patch(&format!(
+                "{}/api/user/portfolioitem?id={}&name={}",
+                &self.address, &id, &new_name
+            ))
+            .send()
+            .await
+            .expect("Failed to execute a request")
+    }
+
+    pub async fn edit_trade_item(
+        &self,
+        id: &uuid::Uuid,
+        name: &str,
+        value: &str,
+    ) -> reqwest::Response {
+        self.api_client
+            .patch(&format!(
+                "{}/api/user/tradeitem?id={}&name={}&value={}",
+                &self.address, &id, &name, &value
+            ))
             .send()
             .await
             .expect("Failed to execute a request")
@@ -85,7 +169,22 @@ impl TestUser {
     }
 }
 
+static TRACING: Lazy<()> = Lazy::new(|| {
+    let subscriber_name = "test".into();
+    let default_filter_level = "debug".into();
+
+    if std::env::var("TEST_LOG").is_ok() {
+        let subscriber = get_subscriber(subscriber_name, default_filter_level, std::io::stdout);
+        init_subscriber(subscriber);
+    } else {
+        let subscriber = get_subscriber(subscriber_name, default_filter_level, std::io::sink);
+        init_subscriber(subscriber);
+    }
+});
+
 pub async fn spawn_app() -> TestApp {
+    Lazy::force(&TRACING);
+
     let configuration = {
         let mut c = get_configuration().expect("Failed to read configuration");
         c.database.database_name = Uuid::new_v4().to_string();

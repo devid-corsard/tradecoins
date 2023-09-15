@@ -4,7 +4,7 @@ test:
 	cargo test
 
 test_dbg:
-	cargo test -- --nocapture
+	cargo test $(n) -- --nocapture
 
 test_by_name:
 	cargo test $(n)
