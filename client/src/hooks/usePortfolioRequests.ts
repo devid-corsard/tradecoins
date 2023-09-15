@@ -5,13 +5,10 @@ import { PortfolioItemCreated, TradeItemCreated } from "../dto/PortfolioDto";
 import { TradeItemInputNames } from "../domain/TradeItemType";
 
 export default function usePortfolioRequests() {
-    // async function postLogout(): Promise<boolean | null> {
-    //     return fetch("/api/user/logout", {
-    //         method: "post",
-    //     })
-    //         .then((res) => res.ok)
-    //         .catch(() => null);
-    // }
+    enum TradeItemActions {
+        New = "New",
+        Copy = "Copy",
+    }
 
     async function getPortfolio(): Promise<PortfilioType | null> {
         return fetch("/api/user/portfolio", { method: "GET" })
@@ -52,7 +49,11 @@ export default function usePortfolioRequests() {
         parent_id: UUID
     ): Promise<TradeItemCreated | null> {
         return fetch(
-            "/api/user/tradeitem?" + new URLSearchParams({ id: parent_id }),
+            "/api/user/tradeitem?" +
+                new URLSearchParams({
+                    action: TradeItemActions.New,
+                    parent_id,
+                }),
             {
                 method: "POST",
             }
@@ -63,9 +64,13 @@ export default function usePortfolioRequests() {
 
     // todo: implement correctly now its creating new
     async function copyTradeItem(id: UUID): Promise<TradeItemCreated | null> {
-        return fetch("/api/user/tradeitem?" + new URLSearchParams({ id }), {
-            method: "POST",
-        })
+        return fetch(
+            "/api/user/tradeitem?" +
+                new URLSearchParams({ action: TradeItemActions.Copy, id }),
+            {
+                method: "POST",
+            }
+        )
             .then((res) => res.json())
             .catch(() => null);
     }
