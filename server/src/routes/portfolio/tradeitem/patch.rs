@@ -53,7 +53,6 @@ pub async fn edit_tradeitem(
         .context(format!("Failed to edit trade item - id:{}", q_params.id))
         .map_err(e500)?;
     if rows_affected == 0 {
-        // return Ok(HttpResponse::BadRequest().finish());
         return Err(e400("No changes"));
     }
     Ok(HttpResponse::NoContent().finish())
