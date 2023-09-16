@@ -1,4 +1,4 @@
-name: Deploy static content to server
+name: Deploy static
 
 on:
   push:

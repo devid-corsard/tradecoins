@@ -1,4 +1,4 @@
-name: Copy to server and Run in docker
+name: Deploy server
 
 on:
   push:
