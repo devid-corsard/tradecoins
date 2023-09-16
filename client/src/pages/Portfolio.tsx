@@ -20,7 +20,6 @@ const Portfolio = () => {
                 // handle server error
                 return;
             }
-            console.log("ids:", ids);
             const action: AddNewPortfolioItemAction = {
                 type: PortfolioActionsEnum.addNewPortfolioItem,
                 payload: ids,
@@ -40,7 +39,6 @@ const Portfolio = () => {
                 payload: { value: portfolio },
             };
             dispatch(action);
-            console.log("async useEff:", portfolio);
         }
         fetchData();
     }, []);
@@ -55,7 +53,7 @@ const Portfolio = () => {
                             <PortfolioItem item={item} key={item.id} />
                         ))
                     ) : (
-                        <h2>Add new item to start using your portfolio.</h2>
+                        <h2>Add new coin to start using your portfolio.</h2>
                     )}
                     <button className="wide" onClick={handleAddNew}>
                         Add new coin

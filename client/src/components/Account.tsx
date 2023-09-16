@@ -8,7 +8,6 @@ const Account = () => {
     const { getUserInfo, postLogout } = useUserRequests();
     useEffect(() => {
         getUserInfo().then((user) => {
-            console.log("use effect: ", user);
             if (user) setAuth({ authorized: true, username: user.name });
         });
     }, [auth.authorized]);
