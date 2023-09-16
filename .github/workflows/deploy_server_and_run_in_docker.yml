@@ -1,9 +1,13 @@
-name: Deploy and Run
+name: Copy to server and Run in docker
 
 on:
   push:
     branches:
       - main
+    paths:
+      - 'server/*'
+      - 'server/**'
+      - 'server/**/*'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -21,7 +25,7 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: "server/*, !server/tests"
-        target: "~/tradecoins/server"
+        target: "~/tradecoins"
         overwrite: true
     - name: Start server in docker
       uses: appleboy/ssh-action@v0.1.10

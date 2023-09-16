@@ -1,9 +1,9 @@
 name: Deploy static content to server
 
 on:
-  # Runs on pushes targeting the default branch
   push:
-    branches: ['main']
+    branches:
+      - main
     paths:
       - 'client/*'
       - 'client/**'
@@ -39,6 +39,6 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "*, !.git, !.github"
-          target: "~/tradecoins/client/"
+          source: "client/dist"
+          target: "~/tradecoins"
           overwrite: true
