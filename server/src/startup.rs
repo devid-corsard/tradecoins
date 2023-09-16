@@ -9,12 +9,12 @@ use crate::{
 use actix_files::Files;
 use actix_session::storage::RedisSessionStore;
 use actix_session::SessionMiddleware;
-use actix_web::{cookie::Key, HttpResponse};
+use actix_web::cookie::Key;
 use actix_web::{dev::Server, web, App, HttpServer};
 use actix_web_lab::middleware::from_fn;
 use secrecy::{ExposeSecret, Secret};
 use sqlx::{postgres::PgPoolOptions, PgPool};
-use std::net::TcpListener;
+use std::{net::TcpListener, path::PathBuf};
 use tracing_actix_web::TracingLogger;
 
 pub struct Application {
@@ -64,10 +64,9 @@ pub struct ApplicationBaseUrl(pub String);
 #[derive(Clone)]
 pub struct HmacSecret(pub Secret<String>);
 
-async fn react() -> HttpResponse {
-    HttpResponse::Ok()
-        .content_type("text/html")
-        .body(include_str!("../../client/dist/index.html"))
+async fn react() -> Result<actix_files::NamedFile, actix_web::Error> {
+    let path: PathBuf = PathBuf::from("../client/dist/index.html");
+    Ok(actix_files::NamedFile::open_async(path).await?)
 }
 
 async fn run(
