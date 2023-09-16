@@ -17,8 +17,5 @@ pub async fn info(
         .map_err(e500)?;
     let username = row.username;
 
-    Ok(HttpResponse::Ok().json(UserInfo {
-        user_id: *user_id,
-        username,
-    }))
+    Ok(HttpResponse::Ok().json(UserInfo { username }))
 }

@@ -2,7 +2,6 @@ use secrecy::Secret;
 
 #[derive(serde::Deserialize, serde::Serialize)]
 pub struct UserInfo {
-    pub user_id: uuid::Uuid,
     pub username: String,
 }
 

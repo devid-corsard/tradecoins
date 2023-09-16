@@ -1,10 +1,8 @@
-import { UUID } from "crypto";
 import { Credentials } from "../dto/Credentials";
 import { ServerMessage } from "../dto/ServerMessage";
 
 type User = {
     name: string;
-    id: UUID;
 };
 
 export default function useUserRequests() {
@@ -19,7 +17,7 @@ export default function useUserRequests() {
     async function getUserInfo(): Promise<User | null> {
         return fetch("/api/user/info", { method: "GET" })
             .then((res) => res.json())
-            .then((user) => ({ name: user.username, id: user.user_id }) as User)
+            .then((user) => ({ name: user.username }) as User)
             .catch(() => null);
     }
 
