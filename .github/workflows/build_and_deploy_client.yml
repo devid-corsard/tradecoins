@@ -39,6 +39,6 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "*"
+          source: "*, !.git, !.github"
           target: "~/tradecoins/client/"
           overwrite: true
