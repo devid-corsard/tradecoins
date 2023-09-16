@@ -1,38 +1,31 @@
-import { ReactNode, createContext, useReducer } from "react";
-import { AuthContextType } from "../types/AuthContextType";
-import User from "../types/User";
-import { AuthActions, AuthActionsEnum } from "../types/AuthActions";
-import { INITIAL_USER } from "./inits";
-import authRequests from "../requests/auth";
+import { Dispatch, ReactNode, createContext, useState } from "react";
+
+type AuthState = {
+    authorized: boolean;
+    username: string;
+};
+
+type AuthContextType = {
+    auth: AuthState;
+    setAuth: Dispatch<React.SetStateAction<AuthState>>;
+};
+
+const INITIAL_AUTH: AuthState = {
+    authorized: false,
+    username: "guest",
+};
 
 export const AuthContext = createContext<AuthContextType>({
-    user: INITIAL_USER,
-    dispatch: () => { },
+    auth: INITIAL_AUTH,
+    setAuth: () => {},
 });
 
 type Props = { children: ReactNode };
 
 export const AuthContextProvider = ({ children }: Props) => {
-    const userReducer = (state: User, action: AuthActions): User => {
-        switch (action.type) {
-            case AuthActionsEnum.Logout:
-                return INITIAL_USER;
-            case AuthActionsEnum.Login:
-                if (action.payload.login === "test")
-                    return { name: action.payload.login, id: "testId" };
-                return INITIAL_USER;
-            case AuthActionsEnum.Register:
-                authRequests[action.type](action.payload);
-                return { name: action.payload.login, id: crypto.randomUUID() };
-            default:
-                return state;
-        }
-    };
-
-    const [user, dispatch] = useReducer(userReducer, INITIAL_USER);
-
+    const [auth, setAuth] = useState<AuthState>(INITIAL_AUTH);
     return (
-        <AuthContext.Provider value={{ user, dispatch }}>
+        <AuthContext.Provider value={{ auth, setAuth }}>
             {children}
         </AuthContext.Provider>
     );

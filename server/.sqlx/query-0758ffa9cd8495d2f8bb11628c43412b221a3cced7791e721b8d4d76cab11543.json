@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE portfolio_item SET name = $1 WHERE id = $2;",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "0758ffa9cd8495d2f8bb11628c43412b221a3cced7791e721b8d4d76cab11543"
+}

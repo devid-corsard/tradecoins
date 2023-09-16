@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO trade_item (id, portfolio_item_id)\n        VALUES ($1, $2);\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "fba08c693cb3e1c43cee0b743fa9fa8a59f47efba56dccf94fadd5c1d99352a7"
+}

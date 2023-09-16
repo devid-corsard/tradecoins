@@ -1,0 +1,1 @@
+ALTER TABLE portfolio_item ALTER COLUMN name DROP NOT NULL;

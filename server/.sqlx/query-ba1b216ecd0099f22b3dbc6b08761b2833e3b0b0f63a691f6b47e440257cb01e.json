@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "DELETE FROM portfolio_item WHERE id = $1;",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "ba1b216ecd0099f22b3dbc6b08761b2833e3b0b0f63a691f6b47e440257cb01e"
+}

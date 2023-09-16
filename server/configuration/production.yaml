@@ -1,5 +1,4 @@
 application:
   host: 0.0.0.0
-  request_origin: https://devid-corsard.github.io
 database:
   require_ssl: false

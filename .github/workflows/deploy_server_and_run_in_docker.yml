@@ -1,0 +1,34 @@
+name: Deploy and Run
+
+on:
+  push:
+    branches:
+      - main
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Copy code to server
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: "server/*, !server/tests"
+        target: "~/tradecoins/server"
+        overwrite: true
+    - name: Start server in docker
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd ~/tradecoins/server
+          docker compose --env-file compose.env up --build -d

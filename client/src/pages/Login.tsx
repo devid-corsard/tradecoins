@@ -1,20 +1,35 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import AccountForm from "../components/AccountForm";
-import { FormData } from "../types/IForm";
 import { AuthContext } from "../context/AuthContext";
-import { AuthActionsEnum } from "../types/AuthActions";
+import useUserRequests from "../hooks/useUserRequests";
+import { useNavigate } from "react-router-dom";
+import { Credentials } from "../dto/Credentials";
 
 const Login = () => {
-  const { dispatch } = useContext(AuthContext);
-  const handleLogin = (formData: FormData) => {
-    dispatch({ type: AuthActionsEnum.Login, payload: formData });
-  };
-  return (
-    <AccountForm
-      onSubmit={handleLogin}
-      welcomeText="Login into your account:"
-    />
-  );
+    const { setAuth } = useContext(AuthContext);
+    const { postLogin } = useUserRequests();
+    const [messages, setMessages] = useState<Array<string>>([]);
+    const navigate = useNavigate();
+    const handleLogin = async (formData: Credentials) => {
+        setMessages(["Login..."]);
+        const response = await postLogin(formData);
+        if (!response) {
+            setMessages(["Unexpected error, try again"]);
+            return;
+        }
+        if (response.success) {
+            setAuth({ authorized: true, username: formData.username });
+            navigate("/");
+        }
+        setMessages(response.messages);
+    };
+    return (
+        <AccountForm
+            onSubmit={handleLogin}
+            welcomeText="Login into your account:"
+            resultMessages={messages}
+        />
+    );
 };
 
 export default Login;

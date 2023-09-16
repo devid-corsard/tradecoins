@@ -1,0 +1,52 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT pi.name, pi.id pi_id, ti.id as \"id?\", ti.amount, ti.buy_price, ti.sell_price\n        FROM portfolio_item pi\n        LEFT JOIN trade_item ti ON pi.id = ti.portfolio_item_id\n        WHERE pi.user_id = $1\n        ORDER BY pi.created_at, ti.created_at;\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "pi_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 2,
+        "name": "id?",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 3,
+        "name": "amount",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "buy_price",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "sell_price",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      true,
+      false,
+      false,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "3af2b3813f36ca7f3fd2443fc330b53cc77d16339bd9628bfa822fb871be9dd6"
+}
