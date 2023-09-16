@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'server/*'
+      - 'server/**'
+      - 'server/**/*'
   workflow_dispatch:
 
 env:
