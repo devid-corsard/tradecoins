@@ -40,5 +40,5 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "*"
-          target: "~/tradecoins/client"
+          target: "~/tradecoins/client/"
           overwrite: true
