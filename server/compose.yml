@@ -47,6 +47,10 @@ services:
     build:
       context: .
       target: runtime
+    volumes:
+      - type: bind
+        source: ~/tradecoins/client/dist
+        target: /client/dist
     networks:
       - nginx
       - default
