@@ -146,6 +146,11 @@ button.outside {
     border-radius: 0 0 0 0.5rem;
 }
 
+button:disabled {
+    color: lightgray;
+    background-color: grey;
+}
+
 input {
     background-color: var(--clr-background-500);
     border: 1px solid var(--clr-accent-600);
