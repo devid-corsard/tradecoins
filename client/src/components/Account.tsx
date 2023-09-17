@@ -33,7 +33,13 @@ const Account = () => {
             ) : (
                 <div>
                     <Link to="settings">
-                        <button className="left neutral">Settings</button>
+                        <button
+                            disabled
+                            title="No settings by now"
+                            className="left neutral"
+                        >
+                            Settings
+                        </button>
                     </Link>
                     <Link to="/">
                         <button className="right bad" onClick={handleLogOut}>
