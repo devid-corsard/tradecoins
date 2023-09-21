@@ -1,5 +1,5 @@
 # Tradecoins
-Fullstack project to learn react, typescript and rust.
+Web app to learn react, typescript and rust.
 
 It is an online crypto portfolio, where you can store info about your crypto assets.
 
